@@ -1,0 +1,1074 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ぴょこのパーセント教室</title>
+<meta name="description" content="うさぎのぴょこと、パーセントの考え方・練習・工事の進捗率を学べるアプリ">
+<meta name="theme-color" content="#EEF6F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1B2320" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ぴょこ％">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yusei+Magic&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap">
+<style>
+/* Layout: one narrow column like a picture-book notebook; 5 tabs on top, big friendly cards, readable on a phone */
+:root{
+  --bg:#EEF6F1;--paper:#FFFFFF;--ink:#33393F;--sub:#66706B;--line:#D5E3DA;
+  --carrot:#E8792A;--carrot-soft:#FFE7D3;--leaf:#3F9A5C;--leaf-soft:#DDF1E3;
+  --pink:#F6A9BC;--sky:#4A8CCB;--sky-soft:#E1EEFA;--warn:#C9741F;--bad:#C94A50;
+  --bunny:#FFFFFF;--bunny-line:#33393F;--key:#F4F6F5;--mole:#9B7A63;--helmet:#F2C230;
+  --display:"Yusei Magic","Zen Maru Gothic","Hiragino Maru Gothic ProN",sans-serif;
+  --body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans","Meiryo",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1B2320;--paper:#25302B;--ink:#EDF2EE;--sub:#A9B6AE;--line:#3A4A42;
+  --carrot:#FF9A4D;--carrot-soft:#4A3424;--leaf:#6CC487;--leaf-soft:#2A4434;
+  --pink:#F2A0B4;--sky:#83B6E6;--sky-soft:#253A4D;--warn:#F0A65A;--bad:#F07C80;
+  --bunny:#F4F1EC;--bunny-line:#2A2F33;--key:#2F3B35;--mole:#B8977E;--helmet:#F2C84A;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1B2320;--paper:#25302B;--ink:#EDF2EE;--sub:#A9B6AE;--line:#3A4A42;
+  --carrot:#FF9A4D;--carrot-soft:#4A3424;--leaf:#6CC487;--leaf-soft:#2A4434;
+  --pink:#F2A0B4;--sky:#83B6E6;--sky-soft:#253A4D;--warn:#F0A65A;--bad:#F07C80;
+  --bunny:#F4F1EC;--bunny-line:#2A2F33;--key:#2F3B35;--mole:#B8977E;--helmet:#F2C84A;color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.8;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 56px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:700px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-wrap:balance;line-height:1.4;margin:0}
+p{margin:0}
+b,strong{font-weight:700}
+.num{font-variant-numeric:tabular-nums}
+.hl{background:linear-gradient(transparent 58%,var(--carrot-soft) 58%);font-weight:700}
+
+.hero{display:flex;align-items:center;gap:14px;padding-block:22px 6px}
+.hero .bun{width:84px;flex:none}
+.hero h1{font-size:1.65rem}
+.hero p{color:var(--sub);font-size:.92rem;margin-top:2px}
+
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:grid;grid-template-columns:repeat(5,1fr);gap:5px;padding-block:8px}
+.tabs button{font:inherit;font-weight:700;font-size:.9rem;border:2px solid var(--line);background:var(--paper);color:var(--ink);
+  border-radius:16px;padding:5px 2px;cursor:pointer;line-height:1.25;display:flex;flex-direction:column;align-items:center}
+.tabs button small{font-size:.68rem;font-weight:700;color:var(--sub)}
+.tabs button[aria-selected="true"]{background:var(--carrot);border-color:var(--carrot);color:#fff}
+.tabs button[aria-selected="true"] small{color:#fff}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+
+section.pane{display:flex;flex-direction:column;gap:18px;padding-top:8px}
+.card{background:var(--paper);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:12px;border:2px solid var(--line)}
+.step{font-size:.78rem;font-weight:700;letter-spacing:.08em;color:var(--carrot)}
+.card h2{font-size:1.3rem}
+.card h3{font-size:1.05rem;color:var(--leaf)}
+.say{display:flex;gap:10px;align-items:flex-start}
+.say .bun,.say .mog{width:54px;flex:none}
+.bubble{background:var(--leaf-soft);border-radius:4px 18px 18px 18px;padding:10px 14px;flex:1;min-width:0}
+.bubble.sky{background:var(--sky-soft)}
+.muted{color:var(--sub);font-size:.9rem}
+.list{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:4px}
+
+/* roadmap */
+.road-map{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.rm{background:var(--bg);border-radius:16px;padding:10px 12px;text-align:left;font:inherit;color:var(--ink);border:2px solid transparent;cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.rm:hover{border-color:var(--carrot)}
+.rm .n{font-family:var(--display);color:var(--carrot);font-size:1.1rem}
+.rm .d{font-size:.82rem;color:var(--sub);line-height:1.5}
+
+.grid100{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;max-width:320px;width:100%;align-self:center}
+.grid100 span{aspect-ratio:1;border-radius:5px;background:var(--line)}
+.grid100 span.on{background:var(--carrot)}
+.bigpct{font-family:var(--display);font-size:2.2rem;color:var(--carrot);text-align:center;line-height:1.2}
+input[type=range]{width:100%;accent-color:var(--carrot);height:32px}
+
+.formula{border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.formula.a{background:var(--carrot-soft)}
+.formula.b{background:var(--sky-soft)}
+.formula.c{background:var(--leaf-soft)}
+.formula .tag{font-weight:900;font-size:.95rem}
+.formula .eq{font-size:1.12rem;font-weight:700;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.pill{background:var(--paper);border-radius:10px;padding:2px 10px;border:2px solid var(--line)}
+.keys{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.key{font-variant-numeric:tabular-nums;min-width:34px;text-align:center;padding:2px 9px;border-radius:9px;background:var(--key);
+  border:1px solid var(--line);border-bottom-width:3px;font-weight:700;font-size:.95rem;line-height:1.6}
+.key.op{color:var(--carrot)}
+.ans{font-weight:900;color:var(--leaf)}
+
+.tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.tip{background:var(--bg);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:2px}
+.tip .t{font-family:var(--display);font-size:1.25rem;color:var(--carrot)}
+.tip .d{font-size:.88rem;line-height:1.6}
+
+.tablebox{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;min-width:300px}
+th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:center;line-height:1.5}
+th{font-size:.85rem;color:var(--sub);font-weight:700}
+td:first-child,th:first-child{text-align:left}
+
+.callout{border-left:5px solid var(--pink);background:var(--bg);border-radius:0 14px 14px 0;padding:10px 14px;font-size:.93rem}
+.callout.ok{border-left-color:var(--leaf)}
+.callout.ng{border-left-color:var(--bad)}
+
+/* why: bar */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;font-size:.9rem;font-weight:700;border:2px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.5}
+.chip[aria-pressed="true"]{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.bar{display:flex;gap:3px;height:44px}
+.bar span{flex:1;border-radius:6px;background:var(--line);display:grid;place-items:center;font-size:.7rem;color:var(--sub);min-width:0}
+.bar span.on{background:var(--carrot);color:#fff}
+.scale{position:relative;height:22px;font-size:.78rem;font-weight:700;font-variant-numeric:tabular-nums}
+.scale i{position:absolute;transform:translateX(-50%);font-style:normal;white-space:nowrap}
+.scale i:first-child{transform:none}
+.scale i:last-child{transform:translateX(-100%)}
+.scale.top{color:var(--sky)}
+.scale.bot{color:var(--carrot)}
+.readout{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.readout>div{background:var(--bg);border-radius:14px;padding:10px 12px;min-width:0}
+.readout .v{font-family:var(--display);font-size:1.5rem;line-height:1.3;font-variant-numeric:tabular-nums}
+.readout .l{font-size:.8rem;color:var(--sub);line-height:1.5}
+.ruler{display:flex;flex-direction:column;gap:4px}
+.ruler .rbar{height:18px;border-radius:9px;background:var(--line);position:relative;overflow:hidden}
+.ruler .rbar i{position:absolute;inset:0 auto 0 0;width:25%;background:var(--sky)}
+.stretch{display:flex;flex-direction:column;gap:10px}
+.srow{display:grid;grid-template-columns:4.5em 1fr;gap:8px;align-items:center}
+.srow .lbl{font-size:.82rem;font-weight:700;color:var(--sub);line-height:1.3}
+.sbar{height:26px;border-radius:8px;background:var(--line);position:relative;overflow:hidden}
+.sbar i{position:absolute;inset:0 auto 0 0;background:var(--carrot);display:flex;align-items:center;justify-content:flex-end;padding-right:6px;color:#fff;font-size:.78rem;font-weight:700;font-style:normal;white-space:nowrap}
+.steplist{display:flex;flex-direction:column;gap:8px}
+.steplist>div{display:flex;gap:10px;align-items:flex-start}
+.steplist .no{flex:none;width:28px;height:28px;border-radius:50%;background:var(--carrot);color:#fff;display:grid;place-items:center;font-weight:900;font-size:.9rem;margin-top:2px}
+.steplist .tx{flex:1;min-width:0}
+.dots{display:flex;gap:2px;flex-wrap:wrap}
+.dots span{width:14px;height:14px;border-radius:4px;background:var(--line)}
+.dots span.on{background:var(--sky)}
+
+/* practice */
+.score{display:flex;gap:14px;font-size:.9rem;color:var(--sub);flex-wrap:wrap}
+.score b{color:var(--ink);font-size:1.1rem}
+.qbox{display:flex;gap:12px;align-items:flex-start}
+.qbox .bun{width:70px;flex:none}
+.qtag{display:inline-block;font-size:.75rem;font-weight:700;background:var(--bg);border-radius:999px;padding:0 10px;color:var(--sub);margin-bottom:4px}
+.qtext{font-size:1.15rem;font-weight:700;flex:1;min-width:0;line-height:1.7}
+.answer{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.answer input{font:inherit;font-size:1.4rem;font-weight:700;width:8em;max-width:100%;padding:6px 12px;border-radius:14px;border:2px solid var(--line);background:var(--bg);color:var(--ink);font-variant-numeric:tabular-nums}
+.unit{font-size:1.2rem;font-weight:700}
+.btn{font:inherit;font-weight:700;font-size:1rem;border:none;border-radius:14px;padding:9px 18px;cursor:pointer;background:var(--carrot);color:#fff;line-height:1.5}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.btn.green{background:var(--leaf)}
+.btn.sky{background:var(--sky)}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.choices button{font:inherit;text-align:left;border-radius:16px;padding:10px 12px;cursor:pointer;border:2px solid var(--line);color:var(--ink);line-height:1.5}
+.choices button.a{background:var(--carrot-soft)}
+.choices button.b{background:var(--sky-soft)}
+.choices button b{display:block;font-size:1rem}
+.choices button span{font-size:.82rem}
+.result{border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.result.ok{background:var(--leaf-soft)}
+.result.ng{background:var(--carrot-soft)}
+.result .head{font-family:var(--display);font-size:1.3rem}
+.meter{display:flex;gap:3px}
+.meter span{flex:1;height:20px;border-radius:6px;background:var(--line);position:relative;overflow:hidden}
+.meter span i{position:absolute;inset:0 auto 0 0;background:var(--carrot)}
+.meter-lbl{display:flex;justify-content:space-between;font-size:.75rem;color:var(--sub)}
+
+/* calculator */
+details.calc>summary{cursor:pointer;font-weight:700;list-style:none;display:flex;align-items:center;gap:8px}
+details.calc>summary::-webkit-details-marker{display:none}
+details.calc>summary::before{content:"＋";display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--bg);font-size:.9rem}
+details.calc[open]>summary::before{content:"−"}
+.calcpad{margin-top:10px;display:flex;flex-direction:column;gap:8px;max-width:340px}
+.cdisp{background:var(--bg);border-radius:14px;padding:8px 14px;text-align:right}
+.cdisp .e{font-size:.85rem;color:var(--sub);min-height:1.4em;overflow-wrap:anywhere}
+.cdisp .r{font-size:1.8rem;font-weight:900;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;line-height:1.3}
+.cgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.cgrid button{font:inherit;font-size:1.2rem;font-weight:700;padding:8px 0;border-radius:12px;border:1px solid var(--line);border-bottom-width:3px;background:var(--key);color:var(--ink);cursor:pointer}
+.cgrid button.op{color:var(--carrot)}
+.cgrid button.eq{background:var(--carrot);color:#fff;border-color:var(--carrot)}
+.cgrid button.fn{font-size:.95rem;color:var(--sub)}
+
+/* construction */
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:.88rem;font-weight:700}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row2>*{min-width:0}
+.field input[type=number]{font:inherit;font-size:1.1rem;font-weight:700;padding:5px 10px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+.road{position:relative;height:100px;margin-top:6px}
+.road .lane{position:absolute;left:0;right:0;bottom:10px;height:26px;border-radius:13px;background:var(--line);overflow:hidden}
+.road .done{position:absolute;inset:0 auto 0 0;background:repeating-linear-gradient(90deg,var(--leaf) 0 18px,color-mix(in srgb,var(--leaf) 75%,var(--paper)) 18px 22px)}
+.road .goal{position:absolute;right:0;bottom:38px;font-size:.75rem;font-weight:700;color:var(--sub)}
+.road .runner{position:absolute;bottom:30px;width:58px;transform:translateX(-50%);transition:left .3s ease}
+.road .flag{position:absolute;bottom:36px;width:2px;height:36px;background:var(--sky);transform:translateX(-50%)}
+.road .flag::after{content:"予定";position:absolute;top:-4px;left:3px;font-size:.7rem;font-weight:700;color:var(--sky);white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--bg);border-radius:14px;padding:10px;text-align:center;min-width:0}
+.stat .v{font-family:var(--display);font-size:1.5rem;line-height:1.3;font-variant-numeric:tabular-nums}
+.stat .l{font-size:.78rem;color:var(--sub);line-height:1.4}
+.status{border-radius:16px;padding:12px 14px;font-weight:700;display:flex;gap:10px;align-items:center;line-height:1.6}
+.status .bun,.status .mog{width:50px;flex:none}
+.status.good{background:var(--leaf-soft)}
+.status.mid{background:var(--carrot-soft)}
+.status.bad{background:color-mix(in srgb,var(--bad) 18%,var(--paper))}
+.calcline{background:var(--bg);border-radius:14px;padding:10px 14px;font-size:.95rem;display:flex;flex-direction:column;gap:4px}
+.report{background:var(--bg);border-radius:14px;padding:14px;font-size:.98rem;line-height:1.9}
+
+/* dictionary */
+.search{font:inherit;font-size:1.05rem;width:100%;padding:10px 14px;border-radius:14px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
+.dict{display:flex;flex-direction:column;gap:10px}
+.dict details{background:var(--paper);border:2px solid var(--line);border-radius:18px;padding:0}
+.dict summary{cursor:pointer;list-style:none;padding:12px 16px;display:flex;gap:10px;align-items:center}
+.dict summary::-webkit-details-marker{display:none}
+.dict summary .cat{flex:none;font-size:.7rem;font-weight:700;border-radius:999px;padding:1px 9px;background:var(--bg);color:var(--sub)}
+.dict summary .ttl{flex:1;font-weight:700;min-width:0;line-height:1.5}
+.dict summary::after{content:"＋";color:var(--carrot);font-weight:900}
+.dict details[open] summary::after{content:"−"}
+.dict .body{padding:0 16px 16px;display:flex;flex-direction:column;gap:10px}
+.dict .when{font-size:.9rem;color:var(--sub)}
+.dict .ex{font-size:.92rem}
+.dict .note{font-size:.88rem;background:var(--leaf-soft);border-radius:12px;padding:8px 12px}
+.empty{text-align:center;color:var(--sub);padding:20px}
+
+@media (max-width:440px){
+  .stats{grid-template-columns:1fr 1fr}
+  .stats .stat:last-child{grid-column:span 2}
+  .hero h1{font-size:1.4rem}
+  .tabs button{font-size:.8rem}
+  .choices{grid-template-columns:1fr}
+  .readout{grid-template-columns:1fr}
+}
+@keyframes hop{0%,100%{transform:translateY(0)}40%{transform:translateY(-10px)}}
+.hop{animation:hop .5s ease 2}
+@media (prefers-reduced-motion:reduce){.hop{animation:none}.road .runner{transition:none}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="bun" data-mood="happy"></div>
+    <div>
+      <h1>ぴょこのパーセント教室</h1>
+      <p>算数からにげてきた人のための教室。おぼえるのは2つだけ。電卓もつかってOK。</p>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" id="tab-kihon" aria-selected="true" data-pane="kihon">きほん<small>まず読む</small></button>
+    <button role="tab" id="tab-naze" aria-selected="false" data-pane="naze">なぜ？<small>しくみ</small></button>
+    <button role="tab" id="tab-renshu" aria-selected="false" data-pane="renshu">練習<small>やってみる</small></button>
+    <button role="tab" id="tab-kouji" aria-selected="false" data-pane="kouji">工事<small>進捗率</small></button>
+    <button role="tab" id="tab-jiten" aria-selected="false" data-pane="jiten">辞典<small>困ったら</small></button>
+  </nav>
+
+  <!-- ================= KIHON ================= -->
+  <section class="pane" id="pane-kihon">
+    <div class="card">
+      <h2>この教室のすすめかた</h2>
+      <div class="say"><div class="bun" data-mood="normal"></div>
+        <div class="bubble">はじめまして、ぴょこだよ。<br>算数がにがてでも、今日からで大丈夫。<b>1日5分</b>、上から順番にのぞいてみてね。わからなくなったら、いつでも<b>辞典</b>をひらこう。</div></div>
+      <div class="road-map">
+        <button class="rm" data-go="kihon"><span class="n">1. きほん</span><span class="d">%ってなに？ 計算は2つだけ</span></button>
+        <button class="rm" data-go="naze"><span class="n">2. なぜ？</span><span class="d">わり算・かけ算をする理由</span></button>
+        <button class="rm" data-go="renshu"><span class="n">3. 練習</span><span class="d">問題をといてみる。電卓つき</span></button>
+        <button class="rm" data-go="kouji"><span class="n">4. 工事</span><span class="d">進捗率・遅れの計算</span></button>
+        <button class="rm" data-go="jiten"><span class="n">辞典</span><span class="d">困ったときの計算のしかた</span></button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="step">STEP 1</div>
+      <h2>%（パーセント）ってなに？</h2>
+      <div class="say"><div class="bun" data-mood="normal"></div>
+        <div class="bubble">ぜんぶを<b>100こ</b>に分けたとき、<b>そのうち何こ分か</b>。それだけだよ。<br>にんじん畑が100マスあったら、25マスぶん＝<b>25%</b>。</div></div>
+      <div class="bigpct num" id="gridPct">25%</div>
+      <div class="grid100" id="grid100" aria-hidden="true"></div>
+      <label class="muted" for="gridRange">つまみを動かしてみてね</label>
+      <input type="range" id="gridRange" min="0" max="100" value="25">
+      <p class="muted" id="gridNote"></p>
+      <div class="callout">「パー」は「〜あたり」、「セント」は「100」という意味。つまり<b>パーセント＝100あたり</b>。100円玉＝セント、100年＝センチュリー、の「セン」と同じ仲間です。</div>
+    </div>
+
+    <div class="card">
+      <div class="step">STEP 2</div>
+      <h2>出てくる「3つのことば」</h2>
+      <p>パーセントの問題には、いつもこの3つが出てきます。</p>
+      <div class="tablebox"><table>
+        <tr><th>ことば</th><th>意味</th><th>にんじんの例</th></tr>
+        <tr><td><b>ぜんぶ</b></td><td>もとになる、全体の量</td><td>畑のにんじん 20本</td></tr>
+        <tr><td><b>ぶぶん</b></td><td>そのうちの、一部の量</td><td>食べた 5本</td></tr>
+        <tr><td><b>わりあい（%）</b></td><td>ぶぶんが、ぜんぶの何%か</td><td>25%</td></tr>
+      </table></div>
+      <p>問題では、この3つのうち<b>2つがわかっていて、1つを出す</b>ようになっています。</p>
+    </div>
+
+    <div class="card">
+      <div class="step">STEP 3</div>
+      <h2>おぼえる計算は、この2つだけ</h2>
+      <div class="formula a">
+        <div class="tag">A｜「何%？」が知りたいとき</div>
+        <div class="eq"><span class="pill">ぶぶん</span>÷<span class="pill">ぜんぶ</span>×<span class="pill">100</span></div>
+        <p class="muted">例：にんじん20本のうち、5本食べた。何%食べた？</p>
+        <div class="keys" data-keys="5 ÷ 20 × 100 =" data-ans="25 → 25%"></div>
+      </div>
+      <div class="formula b">
+        <div class="tag">B｜「○%って、いくつ？」が知りたいとき</div>
+        <div class="eq"><span class="pill">ぜんぶ</span>×<span class="pill">○%の数字</span>÷<span class="pill">100</span></div>
+        <p class="muted">例：にんじん200本の10%は何本？</p>
+        <div class="keys" data-keys="200 × 10 ÷ 100 =" data-ans="20 → 20本"></div>
+      </div>
+      <div class="say"><div class="bun" data-mood="wow"></div>
+        <div class="bubble"><b>AとBの見分けかた</b><br>問題に「○%」の数字が<b>書いてない</b> → A<br>問題に「○%」の数字が<b>書いてある</b> → B</div></div>
+      <p class="muted">「なぜこの計算なの？」は、2つめのタブ「なぜ？」でくわしく説明しています。</p>
+    </div>
+
+    <div class="card">
+      <div class="step">STEP 4</div>
+      <h2>どれが「ぜんぶ」？</h2>
+      <p>まちがえやすいのはここだけ。<b>「〜のうち」「〜の」の前にあるのが「ぜんぶ」</b>です。</p>
+      <div class="tablebox"><table>
+        <tr><th>文章</th><th>ぜんぶ</th><th>ぶぶん</th></tr>
+        <tr><td>にんじん<b>20本のうち</b>5本</td><td>20</td><td>5</td></tr>
+        <tr><td>道路<b>500mのうち</b>200m完成</td><td>500</td><td>200</td></tr>
+        <tr><td>工期<b>30日のうち</b>12日たった</td><td>30</td><td>12</td></tr>
+        <tr><td>クラス<b>40人の</b>うち女子が18人</td><td>40</td><td>18</td></tr>
+        <tr><td>目標<b>50mに対して</b>40mできた</td><td>50</td><td>40</td></tr>
+      </table></div>
+      <div class="callout">ぶぶんは、ぜんぶより小さい（ふつうは）。答えが100%をこえたら、わり算の順番が逆かも。</div>
+    </div>
+
+    <div class="card">
+      <div class="step">STEP 5</div>
+      <h2>電卓なしでもわかる、ぴょこのコツ</h2>
+      <div class="tips">
+        <div class="tip"><div class="t">100%</div><div class="d">ぜんぶ。まるごと。<br>200 → 200</div></div>
+        <div class="tip"><div class="t">50%</div><div class="d">半分。2で割る。<br>200 → 100</div></div>
+        <div class="tip"><div class="t">25%</div><div class="d">半分の、さらに半分。<br>200 → 100 → 50</div></div>
+        <div class="tip"><div class="t">10%</div><div class="d">おしりの0をひとつ消す。<br>200 → 20</div></div>
+        <div class="tip"><div class="t">20%</div><div class="d">10%を2つ分。<br>200 → 20 → 40</div></div>
+        <div class="tip"><div class="t">5%</div><div class="d">10%の半分。<br>200 → 20 → 10</div></div>
+        <div class="tip"><div class="t">1%</div><div class="d">100で割る。0を2つ消す。<br>200 → 2</div></div>
+        <div class="tip"><div class="t">75%</div><div class="d">ぜんぶ − 25%。<br>200 − 50 = 150</div></div>
+        <div class="tip"><div class="t">90%</div><div class="d">ぜんぶ − 10%。<br>200 − 20 = 180</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="step">STEP 6</div>
+      <h2>同じ意味の言いかた</h2>
+      <p class="muted">現場では「割」もよく出てきます。1割＝10%、1分（ぶ）＝1%。</p>
+      <div class="tablebox"><table>
+        <tr><th>パーセント</th><th>割</th><th>小数</th><th>ふつうの言葉</th></tr>
+        <tr><td>100%</td><td>10割</td><td>1</td><td>ぜんぶ</td></tr>
+        <tr><td>75%</td><td>7割5分</td><td>0.75</td><td>4つのうち3つ</td></tr>
+        <tr><td>50%</td><td>5割</td><td>0.5</td><td>半分</td></tr>
+        <tr><td>30%</td><td>3割</td><td>0.3</td><td>10こに3こ</td></tr>
+        <tr><td>25%</td><td>2割5分</td><td>0.25</td><td>4つのうち1つ</td></tr>
+        <tr><td>10%</td><td>1割</td><td>0.1</td><td>10こに1こ</td></tr>
+        <tr><td>1%</td><td>1分</td><td>0.01</td><td>100こに1こ</td></tr>
+      </table></div>
+      <div class="callout">スマホの電卓の「%」ボタンは動きがクセモノなので、使わなくてOK。「÷」「×」と「100」だけで全部できます。</div>
+    </div>
+
+    <div class="card">
+      <h2>早見表：「ぜんぶ」の○%はいくつ？</h2>
+      <div class="tablebox"><table id="quickTable"></table></div>
+    </div>
+  </section>
+
+  <!-- ================= NAZE ================= -->
+  <section class="pane" id="pane-naze" hidden>
+    <div class="card">
+      <h2>なぜ、わり算？ なぜ、かけ算？</h2>
+      <div class="say"><div class="bun" data-mood="normal"></div>
+        <div class="bubble">式を丸暗記すると、すぐ忘れちゃう。<br>「なんでそうなるの？」がわかると、<b>式を忘れても自分で思い出せる</b>ようになるよ。ゆっくりいこう。</div></div>
+    </div>
+
+    <div class="card">
+      <div class="step">しくみ 1</div>
+      <h2>わり算には、2つの顔がある</h2>
+      <h3>顔その1：同じ数ずつ分ける</h3>
+      <p>にんじん12本を、うさぎ3びきで分けると？</p>
+      <div class="keys" data-keys="12 ÷ 3 =" data-ans="1ぴき 4本"></div>
+      <h3>顔その2：何こ分あるか数える</h3>
+      <p>にんじん12本は、3本入りのふくろ何こ分？</p>
+      <div class="keys" data-keys="12 ÷ 3 =" data-ans="4ふくろ分"></div>
+      <div class="say"><div class="bun" data-mood="wow"></div>
+        <div class="bubble">パーセントで使うのは<b>顔その2</b>のほう。<br>「ぶぶんは、ぜんぶの<b>何こ分</b>？」を数えているんだよ。</div></div>
+    </div>
+
+    <div class="card">
+      <div class="step">しくみ 2</div>
+      <h2>ぶぶん ÷ ぜんぶ ＝「ぜんぶを1としたら、いくつ分？」</h2>
+      <p>ぜんぶを1本の<b>ようかん</b>だと思ってね。ぶぶんが「ようかん何本分」になるかを出すのが、わり算です。</p>
+      <p class="muted">ぜんぶの数をえらぶ</p>
+      <div class="chips" id="wWholeChips"></div>
+      <label class="muted" for="wPart">ぶぶん（食べた数）をえらぶ</label>
+      <input type="range" id="wPart" min="0" max="20" value="5">
+      <div class="scale top" id="wScaleTop" aria-hidden="true"></div>
+      <div class="bar" id="wBar" aria-hidden="true"></div>
+      <div class="scale bot" id="wScaleBot" aria-hidden="true"></div>
+      <div class="readout">
+        <div><div class="l">ぜんぶを <b>1</b> としたら（わり算）</div><div class="v" id="wDec" style="color:var(--sky)">0.25</div></div>
+        <div><div class="l">ぜんぶを <b>100</b> としたら（×100）</div><div class="v" id="wPct" style="color:var(--carrot)">25%</div></div>
+      </div>
+      <div class="calcline" id="wCalc"></div>
+    </div>
+
+    <div class="card">
+      <div class="step">しくみ 3</div>
+      <h2>なぜ最後に「×100」するの？</h2>
+      <p>わり算で出てくる 0.25 は、<b>「ぜんぶを1」としたときの数</b>。<br>でもパーセントは<b>「ぜんぶを100」としたときの数</b>。<br>だから、<span class="hl">1を100に変えるために、100倍する</span>んです。</p>
+      <h3>メジャーで考えるとかんたん</h3>
+      <div class="ruler">
+        <div class="rbar"><i></i></div>
+        <p>1メートルのうち 0.25メートル ＝ <b>25センチ</b>。<br>1メートル＝100センチだから、0.25に100をかけて25センチ。</p>
+      </div>
+      <div class="callout ok">パーセントは「センチ」と同じ。<b>メートル（小数）をセンチ（%）に直すのが ×100</b>。</div>
+      <h3>小数点を右に2つずらすだけ</h3>
+      <div class="tablebox"><table>
+        <tr><th>わり算の答え</th><th>×100</th><th>パーセント</th></tr>
+        <tr><td>0.5</td><td>0.<b>50</b> → 50.</td><td>50%</td></tr>
+        <tr><td>0.25</td><td>0.<b>25</b> → 25.</td><td>25%</td></tr>
+        <tr><td>0.08</td><td>0.<b>08</b> → 8.</td><td>8%</td></tr>
+        <tr><td>1</td><td>1.<b>00</b> → 100.</td><td>100%</td></tr>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <div class="step">しくみ 4</div>
+      <h2>「そろえる作戦」で、もっと感覚的に</h2>
+      <p>パーセントは「ぜんぶを100にしたら？」の話。だから、<b>ぜんぶを100にのばしたら、ぶぶんも同じだけのびる</b>と考えてもOK。</p>
+      <div class="stretch">
+        <div class="srow"><span class="lbl">ぜんぶ 20</span><div class="sbar" style="width:20%"><i style="width:100%">20</i></div></div>
+        <div class="srow"><span class="lbl">ぶぶん 5</span><div class="sbar" style="width:20%"><i style="width:25%;padding-right:2px">5</i></div></div>
+        <p class="muted" style="text-align:center">↓ ぜんぶを100にしたい。20を5倍すると100。ぶぶんも5倍！</p>
+        <div class="srow"><span class="lbl">ぜんぶ 100</span><div class="sbar"><i style="width:100%">100</i></div></div>
+        <div class="srow"><span class="lbl">ぶぶん 25</span><div class="sbar"><i style="width:25%">25 → 25%</i></div></div>
+      </div>
+      <div class="tablebox"><table>
+        <tr><th>ぜんぶ</th><th>100にするには</th><th>ぶぶん</th><th>答え</th></tr>
+        <tr><td>50</td><td>×2</td><td>15 ×2 = 30</td><td>30%</td></tr>
+        <tr><td>25</td><td>×4</td><td>10 ×4 = 40</td><td>40%</td></tr>
+        <tr><td>20</td><td>×5</td><td>7 ×5 = 35</td><td>35%</td></tr>
+        <tr><td>200</td><td>÷2</td><td>60 ÷2 = 30</td><td>30%</td></tr>
+        <tr><td>1000</td><td>÷10</td><td>250 ÷10 = 25</td><td>25%</td></tr>
+      </table></div>
+      <div class="callout">ぜんぶが 37 とか 480 みたいに、100にしづらい数のときは、電卓で「ぶぶん ÷ ぜんぶ × 100」をすれば同じ答えになります。</div>
+    </div>
+
+    <div class="card">
+      <div class="step">しくみ 5</div>
+      <h2>Bは、なぜ「ぜんぶ × ○ ÷ 100」？</h2>
+      <p>「200本の10%は？」を、<b>2ステップ</b>に分けてみます。</p>
+      <div class="steplist">
+        <div><span class="no">1</span><div class="tx"><b>まず1%がいくつか出す。</b><br>1%は「100こに分けた1こ分」だから、ぜんぶ÷100。<br>200 ÷ 100 = <b>2本</b>（これが1%ぶん）</div></div>
+        <div><span class="no">2</span><div class="tx"><b>10%は、1%が10こ。</b><br>だから10をかける。<br>2 × 10 = <b>20本</b></div></div>
+      </div>
+      <div class="dots" id="dots100" aria-hidden="true"></div>
+      <p class="muted">200本を100こに分けた。1マス＝2本。色がついた10マスで20本。</p>
+      <div class="callout ok">かけ算とわり算は<b>順番を入れかえても答えは同じ</b>。<br>200 ÷ 100 × 10 ＝ 200 × 10 ÷ 100 ＝ 20<br>電卓では「ぜんぶ × ○ ÷ 100」のほうが小数が出にくくて楽です。</div>
+    </div>
+
+    <div class="card">
+      <div class="step">しくみ 6</div>
+      <h2>わり算の順番を、まちがえないコツ</h2>
+      <p>わり算は、順番を入れかえると<b>答えが変わります</b>。</p>
+      <div class="tablebox"><table>
+        <tr><th>正しい</th><th>まちがい</th></tr>
+        <tr><td>5 ÷ 20 × 100 = <b>25%</b></td><td>20 ÷ 5 × 100 = 400%</td></tr>
+      </table></div>
+      <div class="say"><div class="bun" data-mood="normal"></div>
+        <div class="bubble"><b>「〜のうち」の数で割る</b>、とおぼえよう。<br>「20本<b>のうち</b>5本」→ 20で割る → 5 ÷ 20。<br>分数で書くと <b>5/20</b>。下が「ぜんぶ」だよ。</div></div>
+    </div>
+
+    <div class="card">
+      <div class="step">しくみ 7</div>
+      <h2>たしかめ算で、自分で答え合わせ</h2>
+      <p>AとBは、行ったり来たりできる関係です。Aで出した答えを、Bでもどしてみると合っているかわかります。</p>
+      <div class="formula a"><div class="tag">A：20本のうち5本は何%？</div><div class="keys" data-keys="5 ÷ 20 × 100 =" data-ans="25%"></div></div>
+      <div class="formula b"><div class="tag">B：20本の25%は何本？（たしかめ）</div><div class="keys" data-keys="20 × 25 ÷ 100 =" data-ans="5本 ✓ もとの数にもどった"></div></div>
+      <div class="callout ok">もとの数にもどれば正解。もどらなければ、どこかの順番がちがいます。</div>
+    </div>
+
+    <div class="card">
+      <h2>まとめ</h2>
+      <ul class="list">
+        <li>わり算 ＝「ぜんぶを1としたら、いくつ分？」</li>
+        <li>×100 ＝「ぜんぶを100に直す」（メートル→センチ）</li>
+        <li>Bは「まず1%（÷100）、それを○こ分（×○）」</li>
+        <li>「〜のうち」の数で割る</li>
+        <li>答えは、反対の計算でたしかめられる</li>
+      </ul>
+      <button class="btn" data-go="renshu" style="align-self:flex-start">練習してみる</button>
+    </div>
+  </section>
+
+  <!-- ================= RENSHU ================= -->
+  <section class="pane" id="pane-renshu" hidden>
+    <div class="card">
+      <h2>れんしゅう問題</h2>
+      <p class="muted">むずかしさ</p>
+      <div class="chips" role="group" aria-label="むずかしさ">
+        <button class="chip" id="lv-easy" data-lv="easy" aria-pressed="true">やさしい</button>
+        <button class="chip" id="lv-norm" data-lv="norm" aria-pressed="false">ふつう</button>
+        <button class="chip" id="lv-hard" data-lv="hard" aria-pressed="false">ちょっとむずかしい</button>
+      </div>
+      <p class="muted">問題のしゅるい</p>
+      <div class="chips" role="group" aria-label="問題のしゅるい">
+        <button class="chip" id="ty-all" data-ty="all" aria-pressed="true">ぜんぶまぜる</button>
+        <button class="chip" id="ty-pick" data-ty="pick" aria-pressed="false">AかBか見分ける</button>
+        <button class="chip" id="ty-a" data-ty="a" aria-pressed="false">A 何%？</button>
+        <button class="chip" id="ty-b" data-ty="b" aria-pressed="false">B いくつ？</button>
+        <button class="chip" id="ty-k" data-ty="k" aria-pressed="false">工事</button>
+        <button class="chip" id="ty-s" data-ty="s" aria-pressed="false">お店・生活</button>
+      </div>
+      <div class="score">
+        <span>せいかい <b class="num" id="sOk">0</b></span>
+        <span>れんぞく <b class="num" id="sStreak">0</b></span>
+        <span>これまでの合計 <b class="num" id="sTotal">0</b></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="qbox"><div class="bun" id="qBun" data-mood="normal"></div><div style="flex:1;min-width:0"><span class="qtag" id="qTag"></span><p class="qtext" id="qText"></p></div></div>
+      <div class="choices" id="choiceBox" hidden>
+        <button type="button" class="a" data-pick="a"><b>A の計算</b><span>ぶぶん ÷ ぜんぶ × 100</span></button>
+        <button type="button" class="b" data-pick="b"><b>B の計算</b><span>ぜんぶ × ○ ÷ 100</span></button>
+      </div>
+      <form class="answer" id="ansForm" autocomplete="off">
+        <input id="ansInput" inputmode="decimal" aria-label="こたえ" placeholder="こたえ">
+        <span class="unit" id="qUnit">%</span>
+        <button class="btn" type="submit">こたえる</button>
+        <button class="btn ghost" type="button" id="hintBtn">ヒント</button>
+      </form>
+      <div class="formula" id="hintBox" hidden></div>
+      <div class="result" id="resBox" hidden></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn green" id="nextBtn" type="button" hidden>つぎの問題へ</button>
+        <button class="btn ghost" id="skipBtn" type="button">べつの問題にする</button>
+      </div>
+      <details class="calc" id="calcBox">
+        <summary>電卓をつかう</summary>
+        <div class="calcpad">
+          <div class="cdisp"><div class="e" id="cExpr"></div><div class="r" id="cRes">0</div></div>
+          <div class="cgrid" id="cGrid">
+            <button type="button" class="fn" data-c="C">C</button><button type="button" class="fn" data-c="BS">⌫</button><button type="button" class="fn" data-c="USE" style="grid-column:span 2">答えに入れる</button>
+            <button type="button" data-c="7">7</button><button type="button" data-c="8">8</button><button type="button" data-c="9">9</button><button type="button" class="op" data-c="÷">÷</button>
+            <button type="button" data-c="4">4</button><button type="button" data-c="5">5</button><button type="button" data-c="6">6</button><button type="button" class="op" data-c="×">×</button>
+            <button type="button" data-c="1">1</button><button type="button" data-c="2">2</button><button type="button" data-c="3">3</button><button type="button" class="op" data-c="−">−</button>
+            <button type="button" data-c="0">0</button><button type="button" data-c=".">.</button><button type="button" class="eq" data-c="=">=</button><button type="button" class="op" data-c="+">+</button>
+          </div>
+          <p class="muted">左から順に計算します。「5 ÷ 20 × 100 =」とそのまま押せばOK。</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ================= KOUJI ================= -->
+  <section class="pane" id="pane-kouji" hidden>
+    <div class="card">
+      <h2>進捗率（しんちょくりつ）＝どこまで進んだか</h2>
+      <div class="say"><div class="mog" data-mood="normal"></div>
+        <div class="bubble sky">現場担当の<b>もぐら</b>だよ。<br>工事の「進捗率」は、さっきの<b>A</b>とまったく同じ計算なんだ。<br><b>終わった量 ÷ 全体の量 × 100</b></div></div>
+      <div class="tablebox"><table>
+        <tr><th>知りたいこと</th><th>計算</th><th>AかBか</th></tr>
+        <tr><td>進捗率</td><td>終わった量 ÷ 全体 × 100</td><td>A</td></tr>
+        <tr><td>達成率</td><td>できた量 ÷ 目標 × 100</td><td>A</td></tr>
+        <tr><td>工期の経過率</td><td>すぎた日数 ÷ 工期 × 100</td><td>A</td></tr>
+        <tr><td>○%は何m？</td><td>全体 × ○ ÷ 100</td><td>B</td></tr>
+        <tr><td>のこりは何%？</td><td>100 − 進捗率</td><td>引き算</td></tr>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <div class="step">シミュレーター 1</div>
+      <h2>道路工事でためしてみよう</h2>
+      <div class="row2">
+        <div class="field"><label for="kTotal">全体の長さ（m）</label><input type="number" id="kTotal" value="500" min="1" inputmode="numeric"></div>
+        <div class="field"><label for="kDoneNum">終わった長さ（m）</label><input type="number" id="kDoneNum" value="200" min="0" inputmode="numeric"></div>
+      </div>
+      <input type="range" id="kDone" min="0" max="500" value="200" aria-label="終わった長さ">
+      <div class="road" aria-hidden="true">
+        <div class="lane"><div class="done" id="kBar"></div></div>
+        <div class="flag" id="kFlag"></div>
+        <div class="runner mog" id="kRunner" data-mood="normal"></div>
+        <div class="goal">ゴール</div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="v" id="kPct" style="color:var(--leaf)">40%</div><div class="l">進捗率</div></div>
+        <div class="stat"><div class="v" id="kRest" style="color:var(--carrot)">60%</div><div class="l">のこり</div></div>
+        <div class="stat"><div class="v" id="kRestM">300m</div><div class="l">のこりの長さ</div></div>
+      </div>
+      <div class="calcline" id="kCalc"></div>
+    </div>
+
+    <div class="card">
+      <div class="step">シミュレーター 2</div>
+      <h2>予定とくらべる：遅れてる？ 順調？</h2>
+      <p>工期（日数）が何%すぎたかも、同じAの計算で出せます。<br><b>進捗率が、日数の%と同じか上なら順調</b>。下なら遅れています。</p>
+      <div class="row2">
+        <div class="field"><label for="dTotal">工期（日）</label><input type="number" id="dTotal" value="30" min="1" inputmode="numeric"></div>
+        <div class="field"><label for="dPassed">今日で何日目？</label><input type="number" id="dPassed" value="15" min="0" inputmode="numeric"></div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="v" id="dPct" style="color:var(--sky)">50%</div><div class="l">日数がすぎた%</div></div>
+        <div class="stat"><div class="v" id="dWork" style="color:var(--leaf)">40%</div><div class="l">工事の進捗率</div></div>
+        <div class="stat"><div class="v" id="dDiff">−10</div><div class="l">差（ポイント）</div></div>
+      </div>
+      <div class="status" id="dStatus"><div class="mog" data-mood="think"></div><span></span></div>
+      <div class="calcline" id="dCalc"></div>
+      <p class="muted">%どうしの引き算の答えは「%」ではなく<b>「ポイント」</b>と言います。40%と50%の差は「10ポイント」。</p>
+    </div>
+
+    <div class="card">
+      <div class="step">シミュレーター 3</div>
+      <h2>間に合う？ 1日あたりの計算</h2>
+      <p>わり算の「顔その1（同じ数ずつ分ける）」の出番です。</p>
+      <div class="calcline" id="pPerDay"></div>
+      <div class="calcline" id="pPace"></div>
+      <div class="status" id="pStatus"><div class="mog" data-mood="normal"></div><span></span></div>
+    </div>
+
+    <div class="card">
+      <div class="step">シミュレーター 4</div>
+      <h2>目標から逆算：○%まで、あと何m？</h2>
+      <p>ここは<b>B</b>の計算。まず「目標の%は何mか」を出して、終わった分を引きます。</p>
+      <div class="row2">
+        <div class="field"><label for="gTarget">目標（%）</label><input type="number" id="gTarget" value="70" min="0" max="100" inputmode="numeric"></div>
+        <div class="field"><label>全体と終わった長さ</label><p class="muted" id="gFrom" style="padding-top:6px"></p></div>
+      </div>
+      <div class="calcline" id="gCalc"></div>
+    </div>
+
+    <div class="card">
+      <div class="step">報告のしかた</div>
+      <h2>上の数字で、報告文をつくると</h2>
+      <p class="muted">シミュレーターの数字を変えると、文章も変わります。</p>
+      <div class="report" id="reportText"></div>
+      <button class="btn ghost" type="button" id="copyReport" style="align-self:flex-start">文章をコピー</button>
+    </div>
+
+    <div class="card">
+      <div class="step">ほかの数え方</div>
+      <h2>長さ以外でも、計算は同じ</h2>
+      <div class="tablebox"><table>
+        <tr><th>なにで数える？</th><th>例</th><th>進捗率</th></tr>
+        <tr><td>長さ</td><td>500m中 200m</td><td>200÷500×100 = 40%</td></tr>
+        <tr><td>数量</td><td>くい80本中 60本</td><td>60÷80×100 = 75%</td></tr>
+        <tr><td>面積</td><td>1200㎡中 300㎡</td><td>300÷1200×100 = 25%</td></tr>
+        <tr><td>金額（出来高）</td><td>契約1000万円中 350万円分</td><td>350÷1000×100 = 35%</td></tr>
+      </table></div>
+      <div class="callout">会社や現場によって、長さ・数量・金額のどれで進捗率を出すかがちがいます。計算のしかたは同じなので、「何を全体にしていますか？」だけ先輩に聞けばOK。</div>
+    </div>
+
+    <div class="card">
+      <h2>現場でよく聞く言いかた</h2>
+      <div class="tablebox"><table>
+        <tr><th>聞いた言葉</th><th>意味</th></tr>
+        <tr><td>進捗50%</td><td>全体の半分まで終わった</td></tr>
+        <tr><td>残り3割</td><td>あと30%。つまり70%終わった</td></tr>
+        <tr><td>8割がた終わった</td><td>だいたい80%終わった</td></tr>
+        <tr><td>5ポイント遅れ</td><td>予定の%より、5だけ少ない</td></tr>
+        <tr><td>出来高（できだか）</td><td>終わった工事の量や金額のこと</td></tr>
+        <tr><td>工程表（こうていひょう）</td><td>いつまでに何%進めるかの予定表</td></tr>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- ================= JITEN ================= -->
+  <section class="pane" id="pane-jiten" hidden>
+    <div class="card">
+      <h2>困ったときの計算辞典</h2>
+      <div class="say"><div class="bun" data-mood="normal"></div>
+        <div class="bubble">「これ、どう計算するんだっけ？」と思ったら、ここで探してね。<br>電卓で押すボタンの順番も、そのまま書いてあるよ。</div></div>
+      <input type="search" class="search" id="dictSearch" placeholder="さがす（例：割引、税、遅れ、のこり）" aria-label="辞典をさがす">
+      <div class="chips" id="dictCats" role="group" aria-label="分類"></div>
+    </div>
+    <div class="dict" id="dictList"></div>
+    <p class="empty" id="dictEmpty" hidden>見つかりませんでした。ちがう言葉でさがすか、分類を「ぜんぶ」にしてみてね。</p>
+  </section>
+</div>
+
+<p style="text-align:center;font-size:.75rem;color:var(--sub);margin-top:28px">ぴょこのパーセント教室 v1.0</p>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
+</script>
+
+<script>
+(function(){
+/* ---------- characters (original) ---------- */
+function bunny(mood){
+  var eyes;
+  if(mood==='happy') eyes='<path d="M36 58q5-6 10 0M64 58q5-6 10 0" fill="none" stroke="var(--bunny-line)" stroke-width="3.2" stroke-linecap="round"/>';
+  else if(mood==='wow') eyes='<circle cx="41" cy="57" r="4.6" fill="var(--bunny-line)"/><circle cx="69" cy="57" r="4.6" fill="var(--bunny-line)"/><circle cx="42.5" cy="55.5" r="1.6" fill="#fff"/><circle cx="70.5" cy="55.5" r="1.6" fill="#fff"/>';
+  else if(mood==='think') eyes='<path d="M36 58h10M64 58h10" stroke="var(--bunny-line)" stroke-width="3.2" stroke-linecap="round"/><path d="M90 34q4 7 0 10q-4-3 0-10z" fill="var(--sky)"/>';
+  else eyes='<circle cx="41" cy="57" r="3.4" fill="var(--bunny-line)"/><circle cx="69" cy="57" r="3.4" fill="var(--bunny-line)"/>';
+  var mouth = mood==='wow' ? '<ellipse cx="55" cy="72" rx="3.4" ry="4" fill="var(--bunny-line)"/>' :
+    '<path d="M50 68q2.5 3 5 0q2.5 3 5 0" fill="none" stroke="var(--bunny-line)" stroke-width="2.4" stroke-linecap="round"/>';
+  return '<svg viewBox="0 0 110 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="うさぎのぴょこ">'+
+    '<g stroke="var(--bunny-line)" stroke-width="3">'+
+    '<path d="M38 40C30 22 30 4 39 3c8-1 10 18 10 36z" fill="var(--bunny)"/>'+
+    '<path d="M62 39C63 21 68 2 76 4c8 2 4 22-6 37z" fill="var(--bunny)"/>'+
+    '<ellipse cx="55" cy="62" rx="38" ry="32" fill="var(--bunny)"/></g>'+
+    '<path d="M39 34C34 22 35 11 39 10c3 0 5 12 5 22z" fill="var(--pink)" opacity=".8"/>'+
+    '<path d="M66 33C68 21 71 11 74 12c3 1 1 13-4 22z" fill="var(--pink)" opacity=".8"/>'+
+    eyes+
+    '<ellipse cx="33" cy="68" rx="6" ry="4" fill="var(--pink)" opacity=".75"/><ellipse cx="77" cy="68" rx="6" ry="4" fill="var(--pink)" opacity=".75"/>'+
+    '<path d="M52 63h6l-3 3z" fill="var(--bunny-line)"/>'+mouth+
+    '<g transform="translate(78 74) rotate(25)"><path d="M0 0l6 22l6-22z" fill="var(--carrot)"/><path d="M3 0l3-7l3 7" fill="var(--leaf)"/></g>'+
+    '</svg>';
+}
+function mole(mood){
+  var eyes;
+  if(mood==='happy') eyes='<path d="M38 58q4-5 8 0M62 58q4-5 8 0" fill="none" stroke="var(--bunny-line)" stroke-width="3" stroke-linecap="round"/>';
+  else if(mood==='think') eyes='<path d="M38 58h8M62 58h8" stroke="var(--bunny-line)" stroke-width="3" stroke-linecap="round"/><path d="M92 40q4 7 0 10q-4-3 0-10z" fill="var(--sky)"/>';
+  else if(mood==='wow') eyes='<circle cx="42" cy="57" r="4" fill="var(--bunny-line)"/><circle cx="66" cy="57" r="4" fill="var(--bunny-line)"/>';
+  else eyes='<circle cx="42" cy="58" r="2.8" fill="var(--bunny-line)"/><circle cx="66" cy="58" r="2.8" fill="var(--bunny-line)"/>';
+  return '<svg viewBox="0 0 110 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="もぐら">'+
+    '<ellipse cx="54" cy="64" rx="36" ry="31" fill="var(--mole)" stroke="var(--bunny-line)" stroke-width="3"/>'+
+    '<ellipse cx="54" cy="74" rx="20" ry="15" fill="var(--bunny)" opacity=".55"/>'+
+    '<path d="M20 44a34 26 0 0 1 68 0z" fill="var(--helmet)" stroke="var(--bunny-line)" stroke-width="3" stroke-linejoin="round"/>'+
+    '<path d="M12 45h84" stroke="var(--bunny-line)" stroke-width="5" stroke-linecap="round"/><path d="M12 45h84" stroke="var(--helmet)" stroke-width="2" stroke-linecap="round"/>'+
+    '<path d="M54 19v24" stroke="var(--bunny-line)" stroke-width="2" opacity=".35"/>'+
+    eyes+
+    '<ellipse cx="54" cy="68" rx="7" ry="5" fill="var(--pink)" stroke="var(--bunny-line)" stroke-width="2"/>'+
+    '<ellipse cx="30" cy="70" rx="5" ry="3.4" fill="var(--pink)" opacity=".7"/><ellipse cx="78" cy="70" rx="5" ry="3.4" fill="var(--pink)" opacity=".7"/>'+
+    '<g fill="var(--pink)" stroke="var(--bunny-line)" stroke-width="2"><ellipse cx="22" cy="86" rx="9" ry="6"/><ellipse cx="86" cy="86" rx="9" ry="6"/></g>'+
+    '</svg>';
+}
+function paint(el){el.innerHTML=(el.classList.contains('mog')?mole:bunny)(el.dataset.mood||'normal')}
+function setMood(el,m){if(el.dataset.mood!==m||!el.innerHTML){el.dataset.mood=m;paint(el)}}
+document.querySelectorAll('.bun,.mog').forEach(paint);
+
+var store={get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+function fmt(n){return (Math.round(n*100)/100).toLocaleString('ja-JP')}
+function r1(n){return Math.round(n*10)/10}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function keyHTML(seq,ans){
+  return seq.split(' ').map(function(t){return '<span class="key'+(/^[÷×−+=]$/.test(t)?' op':'')+'">'+t+'</span>'}).join('')+(ans!=null?'<span class="ans">'+ans+'</span>':'');
+}
+function paintKeys(root){(root||document).querySelectorAll('[data-keys]').forEach(function(el){el.innerHTML=keyHTML(el.dataset.keys,el.dataset.ans)})}
+paintKeys();
+
+/* ---------- tabs ---------- */
+var PANES=['kihon','naze','renshu','kouji','jiten'];
+var tabs=document.querySelectorAll('.tabs button');
+function showPane(id){
+  tabs.forEach(function(b){b.setAttribute('aria-selected',b.dataset.pane===id?'true':'false')});
+  PANES.forEach(function(p){document.getElementById('pane-'+p).hidden=(p!==id)});
+  store.set('pyoko-tab',id);
+}
+tabs.forEach(function(b){b.addEventListener('click',function(){showPane(b.dataset.pane);window.scrollTo({top:0})})});
+document.querySelectorAll('[data-go]').forEach(function(b){b.addEventListener('click',function(){showPane(b.dataset.go);window.scrollTo({top:0})})});
+var h=(location.hash||'').slice(1);
+var saved=store.get('pyoko-tab');
+showPane(PANES.indexOf(h)>=0?h:(PANES.indexOf(saved)>=0?saved:'kihon'));
+
+/* ---------- 100 grid ---------- */
+var grid=document.getElementById('grid100');
+for(var i=0;i<100;i++){grid.appendChild(document.createElement('span'))}
+var cells=grid.children;
+var notes={0:'ひとつもない。',10:'10マスに1マス。「1割」。',20:'5つに分けた1つ分。「2割」。',25:'4つに分けた1つ分。',50:'ちょうど半分！',75:'4つに分けた3つ分。',100:'ぜんぶ！まるごと。'};
+function drawGrid(v){
+  for(var i=0;i<100;i++){cells[i].className=i<v?'on':''}
+  document.getElementById('gridPct').textContent=v+'%';
+  document.getElementById('gridNote').textContent='100マスのうち'+v+'マス。'+(notes[v]||'');
+}
+var gr=document.getElementById('gridRange');
+gr.addEventListener('input',function(){drawGrid(+gr.value)});
+drawGrid(25);
+
+/* ---------- quick table ---------- */
+(function(){
+  var totals=[10,20,50,100,200,500,1000], pcts=[1,5,10,20,25,50,75];
+  var html='<tr><th>ぜんぶ＼%</th>'+pcts.map(function(p){return '<th>'+p+'%</th>'}).join('')+'</tr>';
+  totals.forEach(function(t){html+='<tr><td><b>'+t+'</b></td>'+pcts.map(function(p){return '<td>'+fmt(t*p/100)+'</td>'}).join('')+'</tr>'});
+  document.getElementById('quickTable').innerHTML=html;
+})();
+
+/* ---------- why: bar ---------- */
+var wWhole=20, wholeOpts=[4,5,10,20,25,40];
+var wChips=document.getElementById('wWholeChips'), wPart=document.getElementById('wPart');
+wholeOpts.forEach(function(n){
+  var b=document.createElement('button');b.className='chip';b.type='button';b.textContent='ぜんぶ '+n;b.id='ww-'+n;
+  b.setAttribute('aria-pressed',n===wWhole?'true':'false');
+  b.addEventListener('click',function(){wWhole=n;wChips.querySelectorAll('.chip').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
+    wPart.max=n;wPart.value=Math.min(+wPart.value,n);drawWhy()});
+  wChips.appendChild(b);
+});
+function drawWhy(){
+  var p=+wPart.value, N=wWhole, bar=document.getElementById('wBar');
+  var s='';for(var i=0;i<N;i++){s+='<span class="'+(i<p?'on':'')+'">'+(N<=20?(i+1):'')+'</span>'}
+  bar.innerHTML=s;
+  document.getElementById('wScaleTop').innerHTML='<i style="left:0">0</i><i style="left:50%">0.5</i><i style="left:100%">1（ぜんぶ）</i>';
+  document.getElementById('wScaleBot').innerHTML='<i style="left:0">0%</i><i style="left:50%">50%</i><i style="left:100%">100%</i>';
+  var dec=p/N;
+  document.getElementById('wDec').textContent=fmt(dec);
+  document.getElementById('wPct').textContent=fmt(dec*100)+'%';
+  document.getElementById('wCalc').innerHTML='<div class="keys">'+keyHTML(p+' ÷ '+N+' =',fmt(dec))+'</div><div class="keys">'+keyHTML(fmt(dec)+' × 100 =',fmt(dec*100)+'%')+'</div>'+
+    '<p class="muted">ぜんぶ'+N+'こを1本のようかんとすると、'+p+'こは「'+fmt(dec)+'本分」。100にのばすと「'+fmt(dec*100)+'」。</p>';
+}
+wPart.addEventListener('input',drawWhy);drawWhy();
+
+(function(){var d=document.getElementById('dots100'),s='';for(var i=0;i<100;i++){s+='<span class="'+(i<10?'on':'')+'"></span>'}d.innerHTML=s})();
+
+/* ---------- practice ---------- */
+var lv='easy', ty='all', ok=0, streak=0, total=+(store.get('pyoko-total')||0)||0, cur=null, answered=false;
+document.getElementById('sTotal').textContent=total;
+var POOL={
+  P:{easy:[10,20,25,50,100],norm:[5,10,20,25,30,40,50,60,75,80,90],hard:[5,8,12,15,35,45,60,65,85]},
+  T:{easy:[10,20,40,100,200],norm:[8,12,20,40,50,60,80,120,200,250,400,500],hard:[120,150,250,360,400,600,750,1200,1500]}
+};
+var things=[{n:'にんじん',u:'本',v:'食べた'},{n:'いちご',u:'こ',v:'食べた'},{n:'クッキー',u:'まい',v:'食べた'},{n:'お花のたね',u:'つぶ',v:'まいた'},{n:'どんぐり',u:'こ',v:'ひろった'}];
+var kouji=[{n:'道路',u:'m',v:'舗装（ほそう）が終わった'},{n:'側溝（そっこう）',u:'m',v:'設置が終わった'},{n:'くい打ち',u:'本',v:'打ち終わった'},{n:'工期',u:'日',v:'すぎた'}];
+function pair(){
+  var P=POOL.P[lv],T=POOL.T[lv];
+  for(var k=0;k<300;k++){var p=pick(P),t=pick(T),part=t*p/100;if(part===Math.floor(part)&&part>0)return{p:p,t:t,part:part}}
+  return{p:50,t:20,part:10};
+}
+function meterHTML(p){
+  var s='<div class="meter" aria-hidden="true">';
+  for(var i=0;i<10;i++){var f=Math.max(0,Math.min(10,p-i*10))*10;s+='<span><i style="width:'+f+'%"></i></span>'}
+  return s+'</div><div class="meter-lbl"><span>0%</span><span>50%</span><span>100%</span></div>';
+}
+var hintA=function(part,whole){return{cls:'a',html:'<div class="tag">これは A（%が書いてない → 何%？）</div><div class="eq"><span class="pill">ぶぶん '+fmt(part)+'</span>÷<span class="pill">ぜんぶ '+fmt(whole)+'</span>×<span class="pill">100</span></div>'}};
+var hintB=function(whole,p){return{cls:'b',html:'<div class="tag">これは B（%が書いてある → いくつ？）</div><div class="eq"><span class="pill">ぜんぶ '+fmt(whole)+'</span>×<span class="pill">'+p+'</span>÷<span class="pill">100</span></div>'}};
+
+var GEN={
+  a:function(){var th=pick(things),x=pair();return{tag:'A｜何%？',text:th.n+'が '+x.t+th.u+' ありました。そのうち '+x.part+th.u+' '+th.v+'。<br>何%'+th.v+'？',ans:x.p,unit:'%',
+    hint:hintA(x.part,x.t),explain:'<div class="keys">'+keyHTML(x.part+' ÷ '+x.t+' × 100 =',x.p+'%')+'</div>'+meterHTML(x.p)+'<p class="muted">'+x.t+th.u+'のうち'+x.part+th.u+'＝'+x.p+'%</p>'}},
+  b:function(){var th=pick(things),x=pair();return{tag:'B｜いくつ？',text:th.n+'が '+x.t+th.u+' あります。<br>その '+x.p+'% は何'+th.u+'？',ans:x.part,unit:th.u,
+    hint:hintB(x.t,x.p),explain:'<div class="keys">'+keyHTML(x.t+' × '+x.p+' ÷ 100 =',fmt(x.part)+th.u)+'</div>'+meterHTML(x.p)+'<p class="muted">まず1%は '+x.t+'÷100＝'+fmt(x.t/100)+th.u+'。それが'+x.p+'こ分で '+fmt(x.part)+th.u+'。</p>'}},
+  kpct:function(){var kj=pick(kouji),x=pair();return{tag:'工事｜進捗率',text:kj.n+' '+x.t+kj.u+' のうち、'+x.part+kj.u+' '+kj.v+'。<br>'+(kj.u==='日'?'工期の何%がすぎた？':'進捗率は何%？'),ans:x.p,unit:'%',
+    hint:hintA(x.part,x.t),explain:'<div class="keys">'+keyHTML(x.part+' ÷ '+x.t+' × 100 =',x.p+'%')+'</div>'+meterHTML(x.p)}},
+  krest:function(){var kj=pick(kouji.slice(0,3)),x=pair();return{tag:'工事｜のこり',text:kj.n+' '+x.t+kj.u+' のうち、'+x.part+kj.u+' '+kj.v+'。<br>のこりは何%？',ans:100-x.p,unit:'%',
+    hint:{cls:'a',html:'<div class="tag">2ステップ</div><p>① まず進捗率をAで出す：'+x.part+' ÷ '+x.t+' × 100<br>② 100から引く</p>'},
+    explain:'<div class="keys">'+keyHTML(x.part+' ÷ '+x.t+' × 100 =',x.p+'%')+'</div><div class="keys">'+keyHTML('100 − '+x.p+' =','のこり '+(100-x.p)+'%')+'</div>'+meterHTML(x.p)}},
+  ktarget:function(){var kj=pick(kouji.slice(0,3)),x=pair();return{tag:'工事｜目標',text:kj.n+'は全体で '+x.t+kj.u+'。<br>今週中に '+x.p+'% まで進めたい。何'+kj.u+'終わっていればいい？',ans:x.part,unit:kj.u,
+    hint:hintB(x.t,x.p),explain:'<div class="keys">'+keyHTML(x.t+' × '+x.p+' ÷ 100 =',fmt(x.part)+kj.u)+'</div>'+meterHTML(x.p)}},
+  kday:function(){var days=pick(lv==='easy'?[2,5,10]:[3,4,5,6,8,12]),per=pick(lv==='easy'?[10,20,30]:[15,18,25,35,40]),rest=days*per;
+    return{tag:'工事｜1日あたり',text:'道路があと '+rest+'m のこっています。のこりは '+days+'日。<br>1日に何m進めれば間に合う？',ans:per,unit:'m',
+    hint:{cls:'c',html:'<div class="tag">わり算「顔その1」（同じ数ずつ分ける）</div><div class="eq"><span class="pill">のこりの量 '+rest+'</span>÷<span class="pill">のこりの日数 '+days+'</span></div>'},
+    explain:'<div class="keys">'+keyHTML(rest+' ÷ '+days+' =',per+'m／日')+'</div><p class="muted">'+rest+'mを'+days+'日に同じだけ分ける。</p>'}},
+  disc:function(){var price=pick(lv==='easy'?[1000,2000,5000,10000]:[1500,2400,3000,4800,8000,12000]),p=pick(lv==='easy'?[10,50,20]:[10,20,25,30,40]),pay=price*(100-p)/100;
+    return{tag:'お店｜割引',text:price.toLocaleString('ja-JP')+'円のにんじんジュースが '+p+'%引き。<br>いくら払う？',ans:pay,unit:'円',
+    hint:{cls:'b',html:'<div class="tag">B ＋ 引き算</div><p>① 割引の金額を出す：'+price+' × '+p+' ÷ 100<br>② もとのねだんから引く</p><p class="muted">近道：'+p+'%引き＝'+(100-p)+'%を払う → '+price+' × '+(100-p)+' ÷ 100</p>'},
+    explain:'<div class="keys">'+keyHTML(price+' × '+p+' ÷ 100 =','割引 '+fmt(price*p/100)+'円')+'</div><div class="keys">'+keyHTML(price+' − '+fmt(price*p/100)+' =',fmt(pay)+'円')+'</div><p class="muted">近道：'+price+' × '+(100-p)+' ÷ 100 ＝ '+fmt(pay)+'円</p>'}},
+  tax:function(){var base=pick(lv==='easy'?[100,500,1000,2000]:[300,800,1200,2500,4600]);return{tag:'生活｜消費税',text:'税抜き '+base.toLocaleString('ja-JP')+'円のケーキ。消費税10%をたすと、いくら？',ans:base*110/100,unit:'円',
+    hint:{cls:'b',html:'<div class="tag">B ＋ たし算</div><p>① 税金を出す：'+base+' × 10 ÷ 100<br>② もとのねだんにたす</p><p class="muted">近道：'+base+' × 110 ÷ 100</p>'},
+    explain:'<div class="keys">'+keyHTML(base+' × 10 ÷ 100 =','税 '+fmt(base/10)+'円')+'</div><div class="keys">'+keyHTML(base+' + '+fmt(base/10)+' =',fmt(base*1.1)+'円')+'</div>'}},
+  whole:function(){var th=pick(things),x=pair();return{tag:'むずかしい｜ぜんぶを出す',text:th.n+'の '+x.p+'% が '+x.part+th.u+' でした。<br>'+th.n+'は、ぜんぶで何'+th.u+'？',ans:x.t,unit:th.u,
+    hint:{cls:'c',html:'<div class="tag">1%からぜんぶへ</div><p>① 1%ぶんを出す：'+x.part+' ÷ '+x.p+'<br>② 100%（ぜんぶ）にする：× 100</p>'},
+    explain:'<div class="keys">'+keyHTML(x.part+' ÷ '+x.p+' × 100 =',fmt(x.t)+th.u)+'</div><p class="muted">'+x.p+'%が'+x.part+th.u+'なら、1%は'+fmt(x.part/x.p)+th.u+'。100%はその100倍。</p>'}},
+  pick:function(){var isA=Math.random()<.5,base=isA?GEN.a():GEN.b();
+    if(Math.random()<.4){base=isA?GEN.kpct():GEN.ktarget()}
+    base.tag='見分け｜AかBか';base.pick=isA?'a':'b';base.text=base.text+'<br><span class="muted">どっちの計算をつかう？</span>';return base}
+};
+var MIX={
+  all:{easy:['pick','a','b','a','b','kpct','krest'],norm:['pick','a','b','kpct','krest','ktarget','kday','disc','tax'],hard:['a','b','kpct','krest','ktarget','kday','disc','tax','whole','whole']},
+  pick:['pick'],a:['a','kpct'],b:['b','ktarget'],k:['kpct','krest','ktarget','kday'],s:['disc','tax','disc']
+};
+var qText=document.getElementById('qText'),qTag=document.getElementById('qTag'),qUnit=document.getElementById('qUnit'),inp=document.getElementById('ansInput'),
+    hintBox=document.getElementById('hintBox'),resBox=document.getElementById('resBox'),nextBtn=document.getElementById('nextBtn'),qBun=document.getElementById('qBun'),
+    form=document.getElementById('ansForm'),choiceBox=document.getElementById('choiceBox');
+function newQ(){
+  var list=ty==='all'?MIX.all[lv]:MIX[ty];
+  cur=GEN[pick(list)]();answered=false;
+  qTag.textContent=cur.tag;qText.innerHTML=cur.text;qUnit.textContent=cur.unit;inp.value='';
+  choiceBox.hidden=!cur.pick;form.hidden=!!cur.pick;
+  hintBox.hidden=true;resBox.hidden=true;nextBtn.hidden=true;setMood(qBun,'normal');
+}
+var praise=['できた！','すごい！','ばっちり！','その調子！','天才かも！','いいね、その感じ！'];
+var cheer=['おしい！','だいじょうぶ、ここから！','いっしょに見てみよう','まちがえるのも練習のうち','ここでおぼえれば勝ち！'];
+function judge(right,extra){
+  answered=true;
+  if(right){ok++;streak++;total++;store.set('pyoko-total',String(total));setMood(qBun,'happy');qBun.classList.remove('hop');void qBun.offsetWidth;qBun.classList.add('hop')}
+  else{streak=0;setMood(qBun,'think')}
+  document.getElementById('sOk').textContent=ok;document.getElementById('sStreak').textContent=streak;document.getElementById('sTotal').textContent=total;
+  resBox.className='result '+(right?'ok':'ng');
+  resBox.innerHTML='<div class="head">'+(right?pick(praise):pick(cheer))+'</div>'+(extra||'')+'<p><b>とき方</b></p>'+cur.explain;
+  resBox.hidden=false;hintBox.hidden=true;nextBtn.hidden=false;nextBtn.focus();
+}
+function norm(v){return (v||'').replace(/[０-９．]/g,function(ch){return String.fromCharCode(ch.charCodeAt(0)-0xFEE0)}).replace(/[,，、\s]/g,'').replace(/[^\d.\-]/g,'')}
+form.addEventListener('submit',function(e){
+  e.preventDefault();if(answered)return;
+  var v=norm(inp.value);if(v===''){inp.focus();return}
+  var n=parseFloat(v),right=Math.abs(n-cur.ans)<0.01;
+  judge(right,right?'':'<p>こたえは <b>'+fmt(cur.ans)+cur.unit+'</b></p>');
+});
+choiceBox.querySelectorAll('[data-pick]').forEach(function(b){b.addEventListener('click',function(){
+  if(answered)return;var right=b.dataset.pick===cur.pick;
+  judge(right,'<p>この問題は <b>'+(cur.pick==='a'?'A（%が書いてない → 何%？）':'B（%が書いてある → いくつ？）')+'</b>。答えは '+fmt(cur.ans)+cur.unit+'。</p>');
+})});
+document.getElementById('hintBtn').addEventListener('click',function(){hintBox.className='formula '+cur.hint.cls;hintBox.innerHTML=cur.hint.html;hintBox.hidden=!hintBox.hidden});
+nextBtn.addEventListener('click',function(){newQ();if(!form.hidden)inp.focus()});
+document.getElementById('skipBtn').addEventListener('click',newQ);
+function chipGroup(attr,setter){
+  var bs=document.querySelectorAll('[data-'+attr+']');
+  bs.forEach(function(b){b.addEventListener('click',function(){bs.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});setter(b.dataset[attr]);newQ()})});
+}
+chipGroup('lv',function(v){lv=v});chipGroup('ty',function(v){ty=v});
+newQ();
+
+/* ---------- calculator (left to right, like a phone) ---------- */
+var C={acc:null,op:null,cur:'0',fresh:true,expr:''};
+var cExpr=document.getElementById('cExpr'),cRes=document.getElementById('cRes');
+function apply(a,op,b){return op==='+'?a+b:op==='−'?a-b:op==='×'?a*b:(b===0?NaN:a/b)}
+function clean(n){if(!isFinite(n))return 'エラー';return String(parseFloat(n.toPrecision(12)))}
+function cShow(){cRes.textContent=C.cur;cExpr.textContent=C.expr}
+document.getElementById('cGrid').addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;var k=b.dataset.c;
+  if(/^\d$/.test(k)){if(C.fresh){C.cur=k;C.fresh=false}else{C.cur=C.cur==='0'?k:C.cur+k}}
+  else if(k==='.'){if(C.fresh){C.cur='0.';C.fresh=false}else if(C.cur.indexOf('.')<0)C.cur+='.'}
+  else if(k==='C'){C={acc:null,op:null,cur:'0',fresh:true,expr:''}}
+  else if(k==='BS'){if(!C.fresh){C.cur=C.cur.length>1?C.cur.slice(0,-1):'0'}}
+  else if(k==='USE'){inp.value=C.cur;if(!form.hidden)inp.focus()}
+  else if(k==='='){if(C.op!==null){var r=apply(C.acc,C.op,parseFloat(C.cur));C.expr=C.expr+' '+C.cur+' =';C.cur=clean(r);C.acc=null;C.op=null;C.fresh=true}}
+  else{ // operator
+    if(C.op!==null&&!C.fresh){C.acc=apply(C.acc,C.op,parseFloat(C.cur));C.expr=C.expr+' '+C.cur+' '+k;C.cur=clean(C.acc)}
+    else if(C.op!==null&&C.fresh){C.expr=C.expr.slice(0,-1)+k}
+    else{C.acc=parseFloat(C.cur);C.expr=C.cur+' '+k}
+    C.op=k;C.fresh=true;
+  }
+  cShow();
+});
+cShow();
+
+/* ---------- construction ---------- */
+var kTotal=document.getElementById('kTotal'),kDone=document.getElementById('kDone'),kDoneNum=document.getElementById('kDoneNum'),
+    dTotal=document.getElementById('dTotal'),dPassed=document.getElementById('dPassed'),gTarget=document.getElementById('gTarget'),
+    runner=document.getElementById('kRunner');
+function sign(n){return (n>0?'+':n<0?'−':'±')+Math.abs(n)}
+function updK(){
+  var T=Math.max(1,+kTotal.value||1), D=Math.max(0,Math.min(T,+kDoneNum.value||0));
+  kDone.max=T;kDone.value=D;
+  var p=D/T*100, rest=100-p, restM=T-D;
+  document.getElementById('kBar').style.width=p+'%';
+  runner.style.left=Math.min(94,Math.max(5,p))+'%';
+  setMood(runner,p>=100?'happy':'normal');
+  document.getElementById('kPct').textContent=r1(p)+'%';
+  document.getElementById('kRest').textContent=r1(rest)+'%';
+  document.getElementById('kRestM').textContent=fmt(restM)+'m';
+  document.getElementById('kCalc').innerHTML='<p class="muted">進捗率（A）</p><div class="keys">'+keyHTML(fmt(D)+' ÷ '+fmt(T)+' × 100 =',r1(p)+'%')+'</div><p class="muted">のこり</p><div class="keys">'+keyHTML('100 − '+r1(p)+' =',r1(rest)+'%')+'</div>';
+  // schedule
+  var DT=Math.max(1,+dTotal.value||1), DP=Math.max(0,Math.min(DT,+dPassed.value||0)), dp=DP/DT*100, diff=r1(p-dp);
+  document.getElementById('kFlag').style.left=Math.min(98,Math.max(2,dp))+'%';
+  document.getElementById('dPct').textContent=r1(dp)+'%';
+  document.getElementById('dWork').textContent=r1(p)+'%';
+  var dd=document.getElementById('dDiff');dd.textContent=sign(diff);
+  dd.style.color=diff>=0?'var(--leaf)':diff>-10?'var(--warn)':'var(--bad)';
+  var st=document.getElementById('dStatus'),msg,mood,cls;
+  if(diff>=0){cls='good';mood='happy';msg=diff>0?'予定より '+Math.abs(diff)+'ポイント進んでいる。順調！':'予定どおり。ぴったり順調！'}
+  else if(diff>-10){cls='mid';mood='think';msg='予定より '+Math.abs(diff)+'ポイント遅れ。ちょっと急ごう。'}
+  else{cls='bad';mood='wow';msg='予定より '+Math.abs(diff)+'ポイント遅れ。早めに相談したほうがいいかも。'}
+  st.className='status '+cls;setMood(st.querySelector('.mog'),mood);st.querySelector('span').textContent=msg;
+  document.getElementById('dCalc').innerHTML='<p class="muted">日数がすぎた%（A）</p><div class="keys">'+keyHTML(DP+' ÷ '+DT+' × 100 =',r1(dp)+'%')+'</div><p class="muted">差（進捗率 − 日数の%）</p><div class="keys">'+keyHTML(r1(p)+' − '+r1(dp)+' =',sign(diff)+'ポイント')+'</div>';
+  // pace
+  var restDays=DT-DP, pd=document.getElementById('pPerDay'), pp=document.getElementById('pPace'), ps=document.getElementById('pStatus');
+  pd.innerHTML= restDays>0 ? '<p class="muted">① のこりを、のこりの日数で分けると（1日に必要な量）</p><div class="keys">'+keyHTML(fmt(restM)+' ÷ '+restDays+' =',fmt(restM/restDays)+'m／日')+'</div>'
+    : '<p class="muted">① 工期の最終日です。のこりは '+fmt(restM)+'m。</p>';
+  if(DP>0&&D>0){
+    var pace=D/DP, need=restM/pace;
+    pp.innerHTML='<p class="muted">② 今までのペース（1日に進んだ量）</p><div class="keys">'+keyHTML(fmt(D)+' ÷ '+DP+' =',fmt(pace)+'m／日')+'</div>'+
+      '<p class="muted">③ 今のペースのままだと、あと何日かかる？</p><div class="keys">'+keyHTML(fmt(restM)+' ÷ '+fmt(pace)+' =',fmt(need)+'日')+'</div>';
+    var ok2=need<=restDays+1e-9;
+    ps.className='status '+(restM===0?'good':ok2?'good':'mid');
+    setMood(ps.querySelector('.mog'),restM===0||ok2?'happy':'think');
+    ps.querySelector('span').textContent=restM===0?'もう全部終わっています！':ok2?'のこり'+restDays+'日に対して、あと約'+fmt(need)+'日。今のペースで間に合います。':'のこり'+restDays+'日に対して、あと約'+fmt(need)+'日かかりそう。1日'+(restDays>0?fmt(restM/restDays):fmt(restM))+'mにペースを上げる必要があります。';
+  }else{
+    pp.innerHTML='<p class="muted">② 今までのペースは、日数と終わった長さが0より大きいと計算できます。</p>';
+    ps.className='status mid';setMood(ps.querySelector('.mog'),'normal');ps.querySelector('span').textContent='数字を入れてみてね。';
+  }
+  // target
+  var G=Math.max(0,Math.min(100,+gTarget.value||0)), gm=T*G/100, need2=gm-D;
+  document.getElementById('gFrom').textContent='全体 '+fmt(T)+'m／終わった '+fmt(D)+'m';
+  document.getElementById('gCalc').innerHTML='<p class="muted">① 目標の'+G+'%は何m？（B）</p><div class="keys">'+keyHTML(fmt(T)+' × '+G+' ÷ 100 =',fmt(gm)+'m')+'</div>'+
+    '<p class="muted">② 終わった分を引く</p><div class="keys">'+keyHTML(fmt(gm)+' − '+fmt(D)+' =',(need2>0?fmt(need2):'0')+'m')+'</div>'+
+    '<p><b>'+(need2>0?'あと '+fmt(need2)+'m 進めれば '+G+'% になります。':'もう '+G+'% をこえています！')+'</b></p>';
+  // report
+  var rep='本日時点（工期'+DT+'日のうち'+DP+'日目）で、進捗率は'+r1(p)+'%です（全体'+fmt(T)+'mのうち'+fmt(D)+'m完了）。'+
+    '予定の'+r1(dp)+'%に対して、'+(diff>0?Math.abs(diff)+'ポイント先行しています。':diff<0?Math.abs(diff)+'ポイント遅れています。':'予定どおりです。')+
+    (restDays>0&&restM>0?'のこり'+fmt(restM)+'mを'+restDays+'日で終えるには、1日あたり'+fmt(restM/restDays)+'m進める必要があります。':'');
+  document.getElementById('reportText').textContent=rep;
+}
+kDone.addEventListener('input',function(){kDoneNum.value=kDone.value;updK()});
+[kTotal,kDoneNum,dTotal,dPassed,gTarget].forEach(function(el){el.addEventListener('input',updK)});
+updK();
+document.getElementById('copyReport').addEventListener('click',function(){
+  var b=this,t=document.getElementById('reportText');
+  function done(){b.textContent='コピーしました';setTimeout(function(){b.textContent='文章をコピー'},1600)}
+  function fallback(){var r=document.createRange();r.selectNodeContents(t);var s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='選択しました。長押しでコピー'}
+  try{navigator.clipboard.writeText(t.textContent).then(done,fallback)}catch(e){fallback()}
+});
+
+/* ---------- dictionary ---------- */
+var D=[
+ {c:'きほん',t:'何%か出したい（わりあい）',w:'「〜のうち、何%？」と聞かれたとき',f:'ぶぶん ÷ ぜんぶ × 100',k:'5 ÷ 20 × 100 =',a:'25%',e:'にんじん20本のうち5本食べた → 25%',n:'%の数字が問題に書いてなければ、これ。'},
+ {c:'きほん',t:'○%はいくつか出したい',w:'「○○の○%は？」と聞かれたとき',f:'ぜんぶ × ○ ÷ 100',k:'200 × 10 ÷ 100 =',a:'20',e:'200本の10% → 20本',n:'%の数字が問題に書いてあれば、これ。'},
+ {c:'きほん',t:'○%がわかっていて、ぜんぶを出したい',w:'「○%が△こだった。ぜんぶでいくつ？」',f:'ぶぶん ÷ ○ × 100',k:'30 ÷ 20 × 100 =',a:'150',e:'全体の20%が30本 → ぜんぶは150本',n:'まず1%ぶん（30÷20＝1.5本）を出して、100倍する考え方です。'},
+ {c:'きほん',t:'のこりは何%？',w:'進んだ%がわかっていて、あと何%か知りたい',f:'100 − 進んだ%',k:'100 − 40 =',a:'60%',e:'40%終わった → のこり60%',n:'ぜんぶ＝100%なので、100から引くだけ。'},
+ {c:'きほん',t:'小数を%に直す',w:'電卓で0.35のような小数が出たとき',f:'小数 × 100',k:'0.35 × 100 =',a:'35%',e:'0.35 → 35%、0.8 → 80%、1.2 → 120%',n:'小数点を右に2つずらすだけ。'},
+ {c:'きほん',t:'%を小数に直す',w:'電卓でかけ算したいとき',f:'% ÷ 100',k:'8 ÷ 100 =',a:'0.08',e:'8% → 0.08、50% → 0.5',n:'小数点を左に2つずらすだけ。'},
+ {c:'きほん',t:'「割」「分」を%に直す',w:'「3割」「2割5分」と言われたとき',f:'1割＝10%、1分＝1%',k:'3 × 10 + 5 =',a:'35%',e:'3割5分 → 35%、8割 → 80%',n:'野球の「打率3割」も30%のこと。'},
+ {c:'きほん',t:'分数を%に直す',w:'「4分の3」「3分の1」と言われたとき',f:'上 ÷ 下 × 100',k:'3 ÷ 4 × 100 =',a:'75%',e:'4分の3 → 75%、3分の1 → 約33.3%',n:'分数の「下」が、ぜんぶ。'},
+ {c:'きほん',t:'答えが小数になって終わらない',w:'33.3333…のように続くとき',f:'四捨五入する',k:'1 ÷ 3 × 100 =',a:'33.33… → 33.3%',e:'小数第1位まで：33.3%、整数なら：33%',n:'つぎの数字が5以上なら1つ上げる、4以下ならそのまま。会社でどこまで出すか決まっていることが多いです。'},
+ {c:'お店・生活',t:'○%引きのねだん',w:'セール・値引きのとき',f:'ねだん × (100 − ○) ÷ 100',k:'3000 × 80 ÷ 100 =',a:'2400円',e:'3000円の20%引き → 2400円',n:'20%引き＝80%を払う、と考えると1回で出せます。'},
+ {c:'お店・生活',t:'○%ふやす（○%増し）',w:'「1割増し」「20%アップ」のとき',f:'もと × (100 + ○) ÷ 100',k:'500 × 120 ÷ 100 =',a:'600',e:'500gの20%増量 → 600g',n:'20%増し＝120%になる、と考えます。'},
+ {c:'お店・生活',t:'消費税10%こみのねだん',w:'税抜きから税こみを出したい',f:'税抜き × 110 ÷ 100',k:'1000 × 110 ÷ 100 =',a:'1100円',e:'税抜き1000円 → 1100円',n:'食料品など8%のものは × 108 ÷ 100。'},
+ {c:'お店・生活',t:'税こみから税抜きにもどす',w:'レシートの金額から税抜きを知りたい',f:'税こみ ÷ 110 × 100',k:'1100 ÷ 110 × 100 =',a:'1000円',e:'税こみ1100円 → 税抜き1000円',n:'1100 × 90 ÷ 100（＝990円）はまちがい。もどすときは「÷110×100」。'},
+ {c:'お店・生活',t:'どのくらい増えた？（増加率）',w:'前とくらべて何%増えたか',f:'(あと − まえ) ÷ まえ × 100',k:'250 − 200 =',a:'50 → 50 ÷ 200 × 100 = 25%',e:'200 → 250 になった → 25%増',n:'「まえ」が、ぜんぶ。'},
+ {c:'お店・生活',t:'どのくらい減った？（減少率）',w:'前とくらべて何%減ったか',f:'(まえ − あと) ÷ まえ × 100',k:'80 − 60 =',a:'20 → 20 ÷ 80 × 100 = 25%',e:'80 → 60 になった → 25%減',n:'こちらも「まえ」が、ぜんぶ。'},
+ {c:'工事',t:'進捗率',w:'工事がどこまで進んだか',f:'終わった量 ÷ 全体の量 × 100',k:'200 ÷ 500 × 100 =',a:'40%',e:'道路500mのうち200m完成 → 40%',n:'長さ・本数・面積・金額、どれで数えても計算は同じ。'},
+ {c:'工事',t:'達成率',w:'目標に対してどれだけできたか',f:'できた量 ÷ 目標 × 100',k:'40 ÷ 50 × 100 =',a:'80%',e:'今日の目標50mに対して40m → 80%',n:'目標をこえると100%より大きくなります（それでOK）。'},
+ {c:'工事',t:'工期の経過率（日数が何%すぎた）',w:'予定とくらべたいとき',f:'すぎた日数 ÷ 工期 × 100',k:'15 ÷ 30 × 100 =',a:'50%',e:'工期30日の15日目 → 50%',n:'これと進捗率をくらべると、遅れているかどうかがわかります。'},
+ {c:'工事',t:'予定とのズレ（何ポイント遅れ）',w:'予定より進んでいるか遅れているか',f:'進捗率 − 予定の%',k:'40 − 50 =',a:'−10ポイント',e:'進捗40%、予定50% → 10ポイント遅れ',n:'マイナスなら遅れ、プラスなら先行。%の引き算は「ポイント」と言います。'},
+ {c:'工事',t:'1日あたり、どれだけ進めればいい？',w:'のこりの日数で間に合わせたいとき',f:'のこりの量 ÷ のこりの日数',k:'300 ÷ 15 =',a:'20m／日',e:'のこり300mを15日で → 1日20m',n:'わり算の「同じ数ずつ分ける」顔。'},
+ {c:'工事',t:'今のペースだと、あと何日かかる？',w:'このままで間に合うか知りたい',f:'① 終わった量 ÷ すぎた日数 ＝ ペース\n② のこりの量 ÷ ペース',k:'200 ÷ 15 =',a:'13.3m／日 → 300 ÷ 13.3 = 約22.5日',e:'15日で200m → のこり300mはあと約23日',n:'のこりの日数より多ければ、ペースを上げる必要あり。'},
+ {c:'工事',t:'目標の%まで、あと何m？',w:'「月末までに70%」などの目標があるとき',f:'全体 × 目標% ÷ 100 − 終わった量',k:'500 × 70 ÷ 100 =',a:'350 → 350 − 200 = 150m',e:'全体500m、終わった200m、目標70% → あと150m',n:'Bで目標の量を出して、引き算。'},
+ {c:'工事',t:'金額で進捗を出す（出来高）',w:'お金ベースで報告するとき',f:'終わった分の金額 ÷ 契約金額 × 100',k:'350 ÷ 1000 × 100 =',a:'35%',e:'契約1000万円のうち350万円分 → 35%',n:'「万円」のままで計算してOK。単位がそろっていれば答えは同じ。'},
+ {c:'こまった',t:'答えが100%をこえちゃった',w:'400%みたいな、ありえない数が出た',f:'わり算の順番を逆にしてみる',k:'5 ÷ 20 × 100 =',a:'25%（20 ÷ 5 だと 400%）',e:'「〜のうち」の数で割るのが正しい',n:'増えたとき・目標をこえたときは、100%をこえても正しい場合があります。'},
+ {c:'こまった',t:'どれが「ぜんぶ」かわからない',w:'わる数がどっちか迷う',f:'「〜のうち」「〜の」「〜に対して」の前がぜんぶ',k:'',a:'',e:'「500mのうち200m」→ ぜんぶは500',n:'くらべる「もと」になるほうが、ぜんぶ。増加率なら「まえ」。'},
+ {c:'こまった',t:'「%」と「ポイント」のちがい',w:'40%が50%になったとき、なんて言う？',f:'%どうしの差 ＝ ポイント',k:'50 − 40 =',a:'10ポイント',e:'40% → 50%は「10ポイント上がった」',n:'「10%上がった」と言うと、40の10%（＝4）増えて44%という意味にもなってしまいます。'},
+ {c:'こまった',t:'電卓の「%」ボタン',w:'押したら変な数字になった',f:'%ボタンは使わない',k:'C',a:'からやり直し',e:'かわりに「÷」「×」と「100」を使う',n:'機種によって動きがちがうので、使わないのがいちばん安全です。'},
+ {c:'こまった',t:'電卓でまちがえた',w:'押しまちがえたかも',f:'Cでぜんぶ消して、最初から',k:'C',a:'',e:'',n:'あせらなくてOK。答えが出たら、たしかめ算（反対の計算）で確認しよう。'}
+];
+var dCat='ぜんぶ', dCats=['ぜんぶ','きほん','工事','お店・生活','こまった'];
+var catBox=document.getElementById('dictCats');
+dCats.forEach(function(c,i){var b=document.createElement('button');b.type='button';b.className='chip';b.id='dc-'+i;b.textContent=c;b.setAttribute('aria-pressed',c===dCat?'true':'false');
+  b.addEventListener('click',function(){dCat=c;catBox.querySelectorAll('.chip').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});drawDict()});catBox.appendChild(b)});
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+var dList=document.getElementById('dictList'), dSearch=document.getElementById('dictSearch');
+function drawDict(){
+  var q=dSearch.value.trim(), html='', n=0;
+  D.forEach(function(d){
+    if(dCat!=='ぜんぶ'&&d.c!==dCat)return;
+    if(q&&(d.t+d.w+d.f+d.e+d.n+d.c).indexOf(q)<0)return;
+    n++;
+    html+='<details><summary><span class="cat">'+esc(d.c)+'</span><span class="ttl">'+esc(d.t)+'</span></summary><div class="body">'+
+      '<p class="when">こんなとき：'+esc(d.w)+'</p>'+
+      '<div class="formula '+(d.c==='工事'?'c':d.c==='お店・生活'?'b':'a')+'"><div class="tag">計算</div><div class="eq" style="white-space:pre-line">'+esc(d.f)+'</div>'+
+      (d.k?'<div class="keys">'+keyHTML(d.k,d.a)+'</div>':'')+'</div>'+
+      (d.e?'<p class="ex"><b>例</b>　'+esc(d.e)+'</p>':'')+
+      '<p class="note">'+esc(d.n)+'</p></div></details>';
+  });
+  dList.innerHTML=html;document.getElementById('dictEmpty').hidden=n>0;
+}
+dSearch.addEventListener('input',drawDict);
+drawDict();
+})();
+</script>
+
+</body>
+</html>
