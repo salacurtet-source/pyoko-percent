@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ぴょこのパーセント教室</title>
-<meta name="description" content="うさぎのぴょこと、パーセントの考え方・練習・工事の進捗率を学べるアプリ">
+<meta name="description" content="うさぎのぴょこと、パーセントの考え方・練習・現場の計算を学べるアプリ">
 <meta name="theme-color" content="#EEF6F1" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2320" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -45,6 +45,7 @@ img{max-width:100%}
   --bunny:#F4F1EC;--bunny-line:#2A2F33;--key:#2F3B35;--mole:#B8977E;--helmet:#F2C84A;color-scheme:dark}
 
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.8;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 56px}
@@ -61,12 +62,12 @@ b,strong{font-weight:700}
 .hero h1{font-size:1.65rem}
 .hero p{color:var(--sub);font-size:.92rem;margin-top:2px}
 
-.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:grid;grid-template-columns:repeat(5,1fr);gap:5px;padding-block:8px}
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:grid;grid-template-columns:repeat(6,1fr);gap:5px;padding-block:8px}
 .tabs button{font:inherit;font-weight:700;font-size:.9rem;border:2px solid var(--line);background:var(--paper);color:var(--ink);
   border-radius:16px;padding:5px 2px;cursor:pointer;line-height:1.25;display:flex;flex-direction:column;align-items:center}
 .tabs button small{font-size:.68rem;font-weight:700;color:var(--sub)}
-.tabs button[aria-selected="true"]{background:var(--carrot);border-color:var(--carrot);color:#fff}
-.tabs button[aria-selected="true"] small{color:#fff}
+.tabs button[aria-selected="true"]{background:var(--carrot);border-color:var(--carrot);color:var(--paper)}
+.tabs button[aria-selected="true"] small{color:var(--paper)}
 button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
 
 section.pane{display:flex;flex-direction:column;gap:18px;padding-top:8px}
@@ -125,10 +126,10 @@ td:first-child,th:first-child{text-align:left}
 /* why: bar */
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{font:inherit;font-size:.9rem;font-weight:700;border:2px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.5}
-.chip[aria-pressed="true"]{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.chip[aria-pressed="true"]{background:var(--leaf);border-color:var(--leaf);color:var(--paper)}
 .bar{display:flex;gap:3px;height:44px}
 .bar span{flex:1;border-radius:6px;background:var(--line);display:grid;place-items:center;font-size:.7rem;color:var(--sub);min-width:0}
-.bar span.on{background:var(--carrot);color:#fff}
+.bar span.on{background:var(--carrot);color:var(--paper)}
 .scale{position:relative;height:22px;font-size:.78rem;font-weight:700;font-variant-numeric:tabular-nums}
 .scale i{position:absolute;transform:translateX(-50%);font-style:normal;white-space:nowrap}
 .scale i:first-child{transform:none}
@@ -146,10 +147,10 @@ td:first-child,th:first-child{text-align:left}
 .srow{display:grid;grid-template-columns:4.5em 1fr;gap:8px;align-items:center}
 .srow .lbl{font-size:.82rem;font-weight:700;color:var(--sub);line-height:1.3}
 .sbar{height:26px;border-radius:8px;background:var(--line);position:relative;overflow:hidden}
-.sbar i{position:absolute;inset:0 auto 0 0;background:var(--carrot);display:flex;align-items:center;justify-content:flex-end;padding-right:6px;color:#fff;font-size:.78rem;font-weight:700;font-style:normal;white-space:nowrap}
+.sbar i{position:absolute;inset:0 auto 0 0;background:var(--carrot);display:flex;align-items:center;justify-content:flex-end;padding-right:6px;color:var(--paper);font-size:.78rem;font-weight:700;font-style:normal;white-space:nowrap}
 .steplist{display:flex;flex-direction:column;gap:8px}
 .steplist>div{display:flex;gap:10px;align-items:flex-start}
-.steplist .no{flex:none;width:28px;height:28px;border-radius:50%;background:var(--carrot);color:#fff;display:grid;place-items:center;font-weight:900;font-size:.9rem;margin-top:2px}
+.steplist .no{flex:none;width:28px;height:28px;border-radius:50%;background:var(--carrot);color:var(--paper);display:grid;place-items:center;font-weight:900;font-size:.9rem;margin-top:2px}
 .steplist .tx{flex:1;min-width:0}
 .dots{display:flex;gap:2px;flex-wrap:wrap}
 .dots span{width:14px;height:14px;border-radius:4px;background:var(--line)}
@@ -165,7 +166,7 @@ td:first-child,th:first-child{text-align:left}
 .answer{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .answer input{font:inherit;font-size:1.4rem;font-weight:700;width:8em;max-width:100%;padding:6px 12px;border-radius:14px;border:2px solid var(--line);background:var(--bg);color:var(--ink);font-variant-numeric:tabular-nums}
 .unit{font-size:1.2rem;font-weight:700}
-.btn{font:inherit;font-weight:700;font-size:1rem;border:none;border-radius:14px;padding:9px 18px;cursor:pointer;background:var(--carrot);color:#fff;line-height:1.5}
+.btn{font:inherit;font-weight:700;font-size:1rem;border:none;border-radius:14px;padding:9px 18px;cursor:pointer;background:var(--carrot);color:var(--paper);line-height:1.5}
 .btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
 .btn.green{background:var(--leaf)}
 .btn.sky{background:var(--sky)}
@@ -196,7 +197,7 @@ details.calc[open]>summary::before{content:"−"}
 .cgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .cgrid button{font:inherit;font-size:1.2rem;font-weight:700;padding:8px 0;border-radius:12px;border:1px solid var(--line);border-bottom-width:3px;background:var(--key);color:var(--ink);cursor:pointer}
 .cgrid button.op{color:var(--carrot)}
-.cgrid button.eq{background:var(--carrot);color:#fff;border-color:var(--carrot)}
+.cgrid button.eq{background:var(--carrot);color:var(--paper);border-color:var(--carrot)}
 .cgrid button.fn{font-size:.95rem;color:var(--sub)}
 
 /* construction */
@@ -244,10 +245,34 @@ details.calc[open]>summary::before{content:"−"}
   .stats{grid-template-columns:1fr 1fr}
   .stats .stat:last-child{grid-column:span 2}
   .hero h1{font-size:1.4rem}
-  .tabs button{font-size:.8rem}
+  .tabs{grid-template-columns:repeat(3,1fr)}
+  .tabs button{font-size:.85rem}
   .choices{grid-template-columns:1fr}
   .readout{grid-template-columns:1fr}
 }
+/* genba problems */
+.gscene{display:flex;flex-direction:column;gap:2px}
+.gscene h3{font-size:1.1rem;color:var(--ink)}
+.talk{display:flex;flex-direction:column;gap:8px}
+.line{display:flex;gap:8px;align-items:flex-start}
+.line .who{flex:none;width:5.6em;font-size:.72rem;font-weight:700;line-height:1.35;border-radius:10px;padding:5px 6px;background:var(--sky-soft);color:var(--ink);text-align:center}
+.line.boss .who{background:var(--carrot-soft)}
+.line.sub .who{background:var(--leaf-soft)}
+.line p{flex:1;min-width:0;background:var(--bg);border-radius:4px 14px 14px 14px;padding:6px 12px;font-size:.95rem;line-height:1.75}
+.gdots{display:flex;flex-wrap:wrap;gap:5px}
+.gdots button{font:inherit;font-size:.75rem;font-weight:700;width:32px;height:32px;border-radius:9px;border:2px solid var(--line);background:var(--paper);color:var(--sub);cursor:pointer;padding:0;font-variant-numeric:tabular-nums}
+.gdots button.done{background:var(--leaf);border-color:var(--leaf);color:var(--paper)}
+.gdots button.cur{border-color:var(--carrot);color:var(--carrot);box-shadow:0 0 0 3px var(--carrot-soft)}
+.gdots button.done.cur{color:var(--paper)}
+.gnav{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.point{border-left:5px solid var(--sky);background:var(--sky-soft);border-radius:0 14px 14px 0;padding:10px 14px;font-size:.92rem;display:flex;flex-direction:column;gap:2px}
+.point .pl{color:var(--sky);font-size:.78rem;font-weight:900;letter-spacing:.06em}
+.gchoices{display:flex;flex-wrap:wrap;gap:8px}
+.gchoices button{font:inherit;font-weight:700;font-size:1rem;border-radius:14px;padding:10px 22px;border:2px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.gchoices button:hover{border-color:var(--carrot)}
+.bm{display:flex;flex-direction:column;gap:12px;margin-top:10px}
+.big-ans{font-family:var(--display);font-size:1.15rem}
+#gCard,#pane-genba{scroll-margin-top:120px}
 @keyframes hop{0%,100%{transform:translateY(0)}40%{transform:translateY(-10px)}}
 .hop{animation:hop .5s ease 2}
 @media (prefers-reduced-motion:reduce){.hop{animation:none}.road .runner{transition:none}}
@@ -268,6 +293,7 @@ details.calc[open]>summary::before{content:"−"}
     <button role="tab" id="tab-kihon" aria-selected="true" data-pane="kihon">きほん<small>まず読む</small></button>
     <button role="tab" id="tab-naze" aria-selected="false" data-pane="naze">なぜ？<small>しくみ</small></button>
     <button role="tab" id="tab-renshu" aria-selected="false" data-pane="renshu">練習<small>やってみる</small></button>
+    <button role="tab" id="tab-genba" aria-selected="false" data-pane="genba">現場問題<small>1,000万〜</small></button>
     <button role="tab" id="tab-kouji" aria-selected="false" data-pane="kouji">工事<small>進捗率</small></button>
     <button role="tab" id="tab-jiten" aria-selected="false" data-pane="jiten">辞典<small>困ったら</small></button>
   </nav>
@@ -282,7 +308,8 @@ details.calc[open]>summary::before{content:"−"}
         <button class="rm" data-go="kihon"><span class="n">1. きほん</span><span class="d">%ってなに？ 計算は2つだけ</span></button>
         <button class="rm" data-go="naze"><span class="n">2. なぜ？</span><span class="d">わり算・かけ算をする理由</span></button>
         <button class="rm" data-go="renshu"><span class="n">3. 練習</span><span class="d">問題をといてみる。電卓つき</span></button>
-        <button class="rm" data-go="kouji"><span class="n">4. 工事</span><span class="d">進捗率・遅れの計算</span></button>
+        <button class="rm" data-go="genba"><span class="n">4. 現場問題</span><span class="d">1,000万円〜の本物っぽい問題</span></button>
+        <button class="rm" data-go="kouji"><span class="n">5. 工事</span><span class="d">進捗率・遅れの計算</span></button>
         <button class="rm" data-go="jiten"><span class="n">辞典</span><span class="d">困ったときの計算のしかた</span></button>
       </div>
     </div>
@@ -576,6 +603,75 @@ details.calc[open]>summary::before{content:"−"}
     </div>
   </section>
 
+  <!-- ================= GENBA ================= -->
+  <section class="pane" id="pane-genba" hidden>
+    <div class="card">
+      <h2>現場の問題（1,000万円〜）</h2>
+      <div class="say"><div class="mog" data-mood="normal"></div>
+        <div class="bubble sky">ここからは、土木の会社で本当によくある数字のやりとりだよ。<br>金額は大きいけど、<b>計算のしかたは今までと同じ</b>。金額は<b>「万円」のまま</b>電卓に入れてOK。</div></div>
+      <details class="calc" id="bigMoney">
+        <summary>大きい金額の読み方と、電卓の打ち方</summary>
+        <div class="bm">
+          <div class="tablebox"><table>
+            <tr><th>読み方</th><th>数字</th><th>0の数</th><th>「万円」でいうと</th></tr>
+            <tr><td>1万円</td><td>10,000</td><td>4こ</td><td>1万円</td></tr>
+            <tr><td>100万円</td><td>1,000,000</td><td>6こ</td><td>100万円</td></tr>
+            <tr><td>1,000万円</td><td>10,000,000</td><td>7こ</td><td>1,000万円</td></tr>
+            <tr><td>1億円</td><td>100,000,000</td><td>8こ</td><td><b>10,000万円</b></td></tr>
+          </table></div>
+          <div class="steplist">
+            <div><span class="no">1</span><div class="tx"><b>「億」は「万」に直す。</b><br>1億は、1万が1万こ分。だから <b>1億 ＝ 10,000万</b>。<br>1億2,000万円 → <b>12,000</b>万円<br>1億800万円 → <b>10,800</b>万円（1,800ではないので注意）</div></div>
+            <div><span class="no">2</span><div class="tx"><b>電卓には「万」をとって入れる。</b><br>2,976万円なら <span class="key">2976</span> と打つ。<br>答えも「万円」のまま読めばOK。</div></div>
+            <div><span class="no">3</span><div class="tx"><b>%の計算は、「万円」でも「円」でも答えは同じ。</b><br>224万 ÷ 3,200万 ＝ 224 ÷ 3,200 ＝ 0.07 → 7%</div></div>
+            <div><span class="no">4</span><div class="tx"><b>「税抜き」と「税込み」をまぜない。</b><br>比べる数字は、どちらかにそろえてから計算する。</div></div>
+          </div>
+          <p class="muted">答えは「1億800万」「10800」「108000000」のどの書き方で入れても大丈夫。</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="card">
+      <p class="muted">場面をえらぶ</p>
+      <div class="chips" id="gCats" role="group" aria-label="場面"></div>
+      <div class="score"><span>いまの問題 <b class="num" id="gPos">1 / 1</b></span><span>クリア <b class="num" id="gDone">0</b> / <span class="num" id="gAll">0</span> 問</span></div>
+      <div class="gdots" id="gDots" aria-label="問題をえらぶ"></div>
+    </div>
+
+    <div class="card" id="gCard">
+      <div class="gscene"><span class="qtag" id="gTag"></span><h3 id="gTitle"></h3></div>
+      <div class="talk" id="gTalk"></div>
+      <div class="tablebox" id="gTable" hidden></div>
+      <div class="qbox"><div class="bun" id="gBun" data-mood="normal"></div><p class="qtext" id="gQ"></p></div>
+      <form class="answer" id="gForm" autocomplete="off">
+        <input id="gInput" inputmode="text" aria-label="こたえ" placeholder="こたえ">
+        <span class="unit" id="gUnit">%</span>
+        <button class="btn" type="submit">こたえる</button>
+        <button class="btn ghost" type="button" id="gHintBtn">ヒント</button>
+      </form>
+      <div class="gchoices" id="gChoices" hidden></div>
+      <div class="formula" id="gHint" hidden></div>
+      <div class="result" id="gRes" hidden></div>
+      <div class="gnav">
+        <button class="btn ghost" type="button" id="gPrev">← まえの問題</button>
+        <button class="btn green" type="button" id="gNext">つぎの問題 →</button>
+      </div>
+      <details class="calc">
+        <summary>電卓をつかう</summary>
+        <div class="calcpad">
+          <div class="cdisp"><div class="e" id="gcExpr"></div><div class="r" id="gcRes">0</div></div>
+          <div class="cgrid" id="gcGrid">
+            <button type="button" class="fn" data-c="C">C</button><button type="button" class="fn" data-c="BS">⌫</button><button type="button" class="fn" data-c="USE" style="grid-column:span 2">答えに入れる</button>
+            <button type="button" data-c="7">7</button><button type="button" data-c="8">8</button><button type="button" data-c="9">9</button><button type="button" class="op" data-c="÷">÷</button>
+            <button type="button" data-c="4">4</button><button type="button" data-c="5">5</button><button type="button" data-c="6">6</button><button type="button" class="op" data-c="×">×</button>
+            <button type="button" data-c="1">1</button><button type="button" data-c="2">2</button><button type="button" data-c="3">3</button><button type="button" class="op" data-c="−">−</button>
+            <button type="button" data-c="0">0</button><button type="button" data-c=".">.</button><button type="button" class="eq" data-c="=">=</button><button type="button" class="op" data-c="+">+</button>
+          </div>
+          <p class="muted">金額は「万」をとって入れる。左から順に計算します。</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
   <!-- ================= KOUJI ================= -->
   <section class="pane" id="pane-kouji" hidden>
     <div class="card">
@@ -701,7 +797,7 @@ details.calc[open]>summary::before{content:"−"}
   </section>
 </div>
 
-<p style="text-align:center;font-size:.75rem;color:var(--sub);margin-top:28px">ぴょこのパーセント教室 v1.0</p>
+<p style="text-align:center;font-size:.75rem;color:var(--sub);margin-top:28px">ぴょこのパーセント教室 v1.1</p>
 <script>
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
 </script>
@@ -763,7 +859,7 @@ function paintKeys(root){(root||document).querySelectorAll('[data-keys]').forEac
 paintKeys();
 
 /* ---------- tabs ---------- */
-var PANES=['kihon','naze','renshu','kouji','jiten'];
+var PANES=['kihon','naze','renshu','genba','kouji','jiten'];
 var tabs=document.querySelectorAll('.tabs button');
 function showPane(id){
   tabs.forEach(function(b){b.setAttribute('aria-selected',b.dataset.pane===id?'true':'false')});
@@ -923,18 +1019,19 @@ chipGroup('lv',function(v){lv=v});chipGroup('ty',function(v){ty=v});
 newQ();
 
 /* ---------- calculator (left to right, like a phone) ---------- */
-var C={acc:null,op:null,cur:'0',fresh:true,expr:''};
-var cExpr=document.getElementById('cExpr'),cRes=document.getElementById('cRes');
 function apply(a,op,b){return op==='+'?a+b:op==='−'?a-b:op==='×'?a*b:(b===0?NaN:a/b)}
 function clean(n){if(!isFinite(n))return 'エラー';return String(parseFloat(n.toPrecision(12)))}
+function makeCalc(gridId,exprId,resId,useFn){
+var C={acc:null,op:null,cur:'0',fresh:true,expr:''};
+var cExpr=document.getElementById(exprId),cRes=document.getElementById(resId);
 function cShow(){cRes.textContent=C.cur;cExpr.textContent=C.expr}
-document.getElementById('cGrid').addEventListener('click',function(e){
+document.getElementById(gridId).addEventListener('click',function(e){
   var b=e.target.closest('button');if(!b)return;var k=b.dataset.c;
   if(/^\d$/.test(k)){if(C.fresh){C.cur=k;C.fresh=false}else{C.cur=C.cur==='0'?k:C.cur+k}}
   else if(k==='.'){if(C.fresh){C.cur='0.';C.fresh=false}else if(C.cur.indexOf('.')<0)C.cur+='.'}
   else if(k==='C'){C={acc:null,op:null,cur:'0',fresh:true,expr:''}}
   else if(k==='BS'){if(!C.fresh){C.cur=C.cur.length>1?C.cur.slice(0,-1):'0'}}
-  else if(k==='USE'){inp.value=C.cur;if(!form.hidden)inp.focus()}
+  else if(k==='USE'){useFn(C.cur)}
   else if(k==='='){if(C.op!==null){var r=apply(C.acc,C.op,parseFloat(C.cur));C.expr=C.expr+' '+C.cur+' =';C.cur=clean(r);C.acc=null;C.op=null;C.fresh=true}}
   else{ // operator
     if(C.op!==null&&!C.fresh){C.acc=apply(C.acc,C.op,parseFloat(C.cur));C.expr=C.expr+' '+C.cur+' '+k;C.cur=clean(C.acc)}
@@ -945,6 +1042,262 @@ document.getElementById('cGrid').addEventListener('click',function(e){
   cShow();
 });
 cShow();
+}
+makeCalc('cGrid','cExpr','cRes',function(v){inp.value=v;if(!form.hidden)inp.focus()});
+
+/* ---------- genba problems (1,000万円〜) ---------- */
+function S(l,k,a){return{l:l,k:k,a:a}}
+var BOSS='boss',SUB='sub',OTH='oth';
+var GCATS=[['all','ぜんぶ'],['mitsu','見積の比較'],['nego','値引き交渉'],['shizai','資材の比較'],['yosan','予算・利益'],['keiyaku','入札・契約'],['deki','出来高・支払い']];
+var G=[
+/* --- 見積の比較 --- */
+{c:'mitsu',t:'市道さくら線 舗装工事｜下請けの相見積もり',
+ talk:[[BOSS,'工事課長','舗装の見積、3社そろったよ。ぜんぶ税抜きね。'],[BOSS,'工事課長','くるみ舗装さんが2,500万、どんぐり舗装さんが2,250万、ささの葉舗装さんが2,750万。どんぐりさんが、くるみさんより何%安いか出してくれる？']],
+ table:[['会社','見積（税抜き）'],['くるみ舗装','2,500万円'],['どんぐり舗装','2,250万円'],['ささの葉舗装','2,750万円']],
+ q:'どんぐり舗装は、くるみ舗装より何%安い？',ans:10,unit:'%',
+ hint:['a','「くるみ舗装<b>より</b>」なので、くるみ舗装の2,500万円が「もと」。<br>① 差を出す　② 差 ÷ もと × 100'],
+ steps:[S('① 差を出す','2500 − 2250 =','250万円'),S('② もとで割って100倍','250 ÷ 2500 × 100 =','10%')],
+ point:'「〜より何%」と聞かれたら、「〜」の数で割る。ここは「くるみ舗装より」なので2,500で割る。'},
+{c:'mitsu',t:'市道さくら線 舗装工事｜いちばん高い見積',
+ talk:[[BOSS,'工事課長','ささの葉さんは2,750万か。いちばん安いどんぐりさん（2,250万）とくらべて、何%高いかな。']],
+ q:'ささの葉舗装は、どんぐり舗装より何%高い？（小数第1位まで。四捨五入）',ans:22.2,tol:0.06,unit:'%',
+ hint:['a','「どんぐり舗装<b>より</b>」なので、2,250万円が「もと」。<br>答えが 22.222… のように続いたら、小数第2位を四捨五入。'],
+ steps:[S('① 差を出す','2750 − 2250 =','500万円'),S('② もとで割って100倍','500 ÷ 2250 × 100 =','22.222…'),S('③ 四捨五入','22.22 →','22.2%')],
+ point:'さっきの問題と「もと」がちがうので、%も変わる。どの会社を「もと」にしたかを、報告のときにも言うとまちがいがない。'},
+{c:'mitsu',t:'河川護岸工事｜重機の条件がちがう見積',
+ talk:[[SUB,'どんぐり土木','うちは重機とダンプ込みで3,480万円です。'],[SUB,'くるみ土木','うちは3,150万円。ただ、重機とダンプは元請さんで用意してください。'],[BOSS,'工事課長','うちで手配すると、バックホウが1日4万円で45日、ダンプが1日5万円で36日だな。']],
+ q:'くるみ土木に頼んだときの「実質の金額」はいくら？',ans:3510,unit:'万円',
+ hint:['c','見積に入っていない「元請で用意する分」を、くるみ土木の見積に足す。<br>バックホウ代 ＝ 4万円 × 45日、ダンプ代 ＝ 5万円 × 36日'],
+ steps:[S('① バックホウ代','4 × 45 =','180万円'),S('② ダンプ代','5 × 36 =','180万円'),S('③ ぜんぶ足す','3150 + 180 + 180 =','3,510万円')],
+ point:'見た目は330万円安いくるみ土木が、実質ではどんぐり土木より30万円高い。比べるときは「何が入っていて、何が入っていないか」をそろえる。'},
+{c:'mitsu',kind:'choice',t:'橋台工事｜型枠の見積比較',
+ talk:[[SUB,'A社','型枠一式で1,860万円です。足場と運搬も込みです。'],[SUB,'B社','1,720万円です。足場は別途で95万円、運搬は1回3万円で20回の予定です。']],
+ q:'実質で安いのはどっち？',choices:['A社','B社','同じ'],ans:'A社',
+ hint:['c','B社の「別途（べっと）」の分を足してから比べる。<br>運搬代 ＝ 3万円 × 20回'],
+ steps:[S('① B社の運搬代','3 × 20 =','60万円'),S('② B社の実質','1720 + 95 + 60 =','1,875万円'),S('③ 差','1875 − 1860 =','A社が15万円安い')],
+ point:'見積書の「別途」は、見積金額に入っていないという意味。必ず足してから比べる。'},
+/* --- 値引き交渉 --- */
+{c:'nego',t:'擁壁工事｜下請けとの商談',
+ talk:[[BOSS,'工事課長','3,200万円はちょっと厳しいなあ。もう少しなんとかならない？'],[SUB,'どんぐり土木','わかりました。会社と相談して…2,976万円でどうでしょう。']],
+ q:'見積は何%下がった？',ans:7,unit:'%',
+ hint:['a','値引き率は「もとの見積」で割る。<br>① 下がった金額を出す　② ÷ 3,200 × 100'],
+ steps:[S('① 下がった金額','3200 − 2976 =','224万円'),S('② もとの見積で割って100倍','224 ÷ 3200 × 100 =','7%')],
+ point:'値引き率は、値引き<b>後</b>ではなく、<b>もとの見積</b>で割る。'},
+{c:'nego',t:'道路改良工事｜実行予算に合わせる',
+ talk:[[BOSS,'工事課長','この工事、実行予算で下請けに出せるのは4,600万円までなんだ。'],[BOSS,'工事課長','でも見積は5,000万円。あと何%下げてもらえばいいか出してくれる？']],
+ q:'何%下げてもらえば予算に入る？',ans:8,unit:'%',
+ hint:['a','もとは見積の5,000万円。<br>① 予算との差を出す　② ÷ 5,000 × 100'],
+ steps:[S('① 予算との差','5000 − 4600 =','400万円'),S('② もとで割って100倍','400 ÷ 5000 × 100 =','8%')],
+ point:'商談の前に「何%下げてほしいか」を数字で持っておくと、話がブレない。'},
+{c:'nego',t:'側溝工事｜出精値引き（しゅっせいねびき）',
+ talk:[[SUB,'くるみ土木','見積は2,347万8,000円ですが、端数を切って2,300万円にします。'],[BOSS,'工事課長','ありがとう、助かるよ。']],
+ q:'値引きの金額はいくら？',ans:478000,unit:'円',
+ hint:['c','引き算するだけ。<br>2,347万8,000円は、万円でいうと 2,347.8万円。'],
+ steps:[S('① 万円で引き算','2347.8 − 2300 =','47.8万円'),S('② 円に直す','47.8 × 10000 =','478,000円')],
+ point:'端数を切ってきりのいい金額にする値引きを「出精値引き」という。見積書のいちばん最後の行に書かれていることが多い。'},
+{c:'nego',t:'トンネル補修工事｜予算を伝えて交渉',
+ talk:[[BOSS,'工事課長','A社が1億2,600万円、B社が1億1,970万円か。仕事ぶりはA社が安心なんだよなあ。'],[BOSS,'工事課長','A社さんに「予算は1億1,970万円です」と伝えてみよう。']],
+ q:'A社が予算に合わせるには、何%下げることになる？',ans:5,unit:'%',
+ hint:['a','まず「億」を「万」に直す。<br>1億2,600万 → 12,600万、1億1,970万 → 11,970万<br>もとはA社の見積。'],
+ steps:[S('① 差を出す','12600 − 11970 =','630万円'),S('② もとで割って100倍','630 ÷ 12600 × 100 =','5%')],
+ point:'ほかの会社の見積書や社名をそのまま見せるのは、マナー違反とされることが多い。「予算はこのくらい」と伝えるのが一般的。'},
+/* --- 資材の比較 --- */
+{c:'shizai',t:'橋の下部工｜生コンの単価比較',
+ talk:[[OTH,'まつぼっくり生コン','1立米（りゅうべ）2万円です。'],[OTH,'ささの葉生コン','うちは1万8,800円でいけます。'],[BOSS,'工事課長','この現場、生コンは全部で850立米使う予定だ。']],
+ q:'2社の合計金額の差はいくら？',ans:102,unit:'万円',
+ hint:['c','① 1立米あたりの差を出す　② × 850立米'],
+ steps:[S('① 1立米あたりの差','20000 − 18800 =','1,200円'),S('② 数量をかける','1200 × 850 =','1,020,000円'),S('③ 万円に直す','1020000 ÷ 10000 =','102万円')],
+ point:'「立米（りゅうべ）」は㎥のこと。1立米の差は1,200円でも、850立米分で102万円の差になる。合計は1,700万円と1,598万円。'},
+{c:'shizai',t:'橋の下部工｜生コンは何%安い？',
+ talk:[[BOSS,'工事課長','ささの葉生コンは、まつぼっくり生コンより何%安いことになる？']],
+ q:'ささの葉生コン（1立米1万8,800円）は、まつぼっくり生コン（2万円）より何%安い？',ans:6,unit:'%',
+ hint:['a','もとは、まつぼっくり生コンの2万円。<br>差 1,200円 ÷ 20,000円 × 100'],
+ steps:[S('① 1立米あたりの差','20000 − 18800 =','1,200円'),S('② もとで割って100倍','1200 ÷ 20000 × 100 =','6%')],
+ point:'単価で%を出しても、合計金額で出しても同じ答えになる（102万 ÷ 1,700万 × 100 ＝ 6%）。'},
+{c:'shizai',t:'農道改良工事｜砕石は運搬費こみで比べる',
+ talk:[[BOSS,'工事課長','路盤用の砕石が4,000立米いる。B社は材料が安いけど、採石場が遠いんだよな。']],
+ table:[['会社','材料（1立米）','運搬（1立米）'],['A社','2,400円','1,100円'],['B社','2,100円','1,600円']],
+ q:'安いほうの会社に頼むと、合計はいくら？',ans:1400,unit:'万円',
+ hint:['c','材料と運搬を足して「1立米あたりの本当の値段」を出してから比べる。'],
+ steps:[S('① A社の1立米','2400 + 1100 =','3,500円'),S('② B社の1立米','2100 + 1600 =','3,700円'),S('③ 安いA社 × 数量','3500 × 4000 =','14,000,000円 ＝ 1,400万円')],
+ point:'材料はB社が安いのに、運搬こみだとA社が80万円安い。砕石や生コンのような重い材料は「運ぶお金」が大きい。'},
+{c:'shizai',t:'ボックスカルバート工事｜鉄筋の値上がり',
+ talk:[[OTH,'資材屋さん','すみません、鉄筋が上がりまして…。先月1トン12万円だったのが、今月は12万6,000円です。'],[BOSS,'工事課長','この現場の鉄筋は95トン。先月の値段なら1,140万円だったんだけどなあ。']],
+ q:'鉄筋の値段は何%上がった？',ans:5,unit:'%',
+ hint:['a','もとは先月の12万円。<br>① 上がった金額を出す　② ÷ 120,000 × 100'],
+ steps:[S('① 上がった金額','126000 − 120000 =','6,000円'),S('② もとで割って100倍','6000 ÷ 120000 × 100 =','5%')],
+ point:'「値上がり率」も、もとは「前の値段」。'},
+{c:'shizai',t:'ボックスカルバート工事｜値上がりで増えるお金',
+ talk:[[BOSS,'工事課長','1トン6,000円の値上がりで、95トン分だといくら増えるんだ？']],
+ q:'鉄筋代はいくら増える？',ans:57,unit:'万円',
+ hint:['c','1トンあたりの値上がり × トン数'],
+ steps:[S('① 値上がり分 × 数量','6000 × 95 =','570,000円'),S('② 万円に直す','570000 ÷ 10000 =','57万円')],
+ point:'鉄筋代は1,140万円 → 1,197万円に。公共工事では、資材が大きく値上がりしたときに発注者と相談できるしくみ（スライド条項）があることも。まず金額を正しくつかむのが大事。'},
+{c:'shizai',t:'水路工事｜まとめ買いの値引き',
+ talk:[[OTH,'メーカーさん','プレキャストのボックス、1基85万円です。24基まとめてなら1割引きにします。']],
+ q:'1割引きにしたときの合計はいくら？',ans:1836,unit:'万円',
+ hint:['b','1割引き ＝ 90%を払う。<br>① 85万円 × 24基　② × 90 ÷ 100'],
+ steps:[S('① 定価の合計','85 × 24 =','2,040万円'),S('② 90%を払う','2040 × 90 ÷ 100 =','1,836万円')],
+ point:'1割 ＝ 10%。「1割引き」は「9割（90%）を払う」と考えると1回で計算できる。'},
+/* --- 予算・利益 --- */
+{c:'yosan',t:'道路改良工事｜実行予算ともうけ',
+ talk:[[BOSS,'工事課長','この工事は1億2,000万円（税抜き）で受注した。'],[BOSS,'工事課長','実行予算、つまり実際にかかるお金の見込みは1億800万円だ。']],
+ q:'もうけ（粗利）は、請負金額の何%？',ans:10,unit:'%',
+ hint:['a','「億」を「万」に直す：12,000万と10,800万。<br>① もうけ ＝ 請負金額 − 実行予算　② ÷ 請負金額 × 100'],
+ steps:[S('① もうけ（粗利）','12000 − 10800 =','1,200万円'),S('② 請負金額で割って100倍','1200 ÷ 12000 × 100 =','10%')],
+ point:'「実行予算（じっこうよさん）」は、工事を実際にやるための社内の予算。受注金額との差が、会社のもうけ（粗利）になる。'},
+{c:'yosan',t:'道路改良工事｜下請けに出す割合',
+ talk:[[BOSS,'工事課長','請負金額1億5,000万円のうち、下請けさんに出すのは合計9,000万円の予定だ。']],
+ q:'下請けに出す割合は何%？',ans:60,unit:'%',
+ hint:['a','15,000万のうち9,000万。<br>9,000 ÷ 15,000 × 100'],
+ steps:[S('① 割って100倍','9000 ÷ 15000 × 100 =','60%')],
+ point:'土木では、専門の工事を下請けさんにお願いすることが多い。元請は全体の管理と、自社でやる工事を受け持つ。'},
+{c:'yosan',t:'排水路工事｜予算オーバー',
+ talk:[[BOSS,'工事課長','実行予算は8,500万円だったのに、終わってみたら8,925万円かかった…。']],
+ q:'予算より何%オーバーした？',ans:5,unit:'%',
+ hint:['a','もとは予算の8,500万円。<br>① オーバーした金額　② ÷ 8,500 × 100'],
+ steps:[S('① オーバーした金額','8925 − 8500 =','425万円'),S('② もとで割って100倍','425 ÷ 8500 × 100 =','5%')],
+ point:'オーバーした原因（雨で日数がのびた、材料の値上がり など）を記録しておくと、次の工事の予算づくりに役立つ。'},
+{c:'yosan',t:'舗装修繕工事｜値上がりでもうけが減った',
+ talk:[[BOSS,'工事課長','受注は1億円。最初の予算は9,200万円で、もうけは800万円の予定だった。'],[BOSS,'工事課長','でもアスファルトが値上がりして、かかるお金が350万円増えてしまった。']],
+ q:'もうけは、請負金額の何%になった？',ans:4.5,tol:0.01,unit:'%',
+ hint:['a','1億 ＝ 10,000万。<br>① 残ったもうけ ＝ 800 − 350　② ÷ 10,000 × 100'],
+ steps:[S('① 残ったもうけ','800 − 350 =','450万円'),S('② 請負金額で割って100倍','450 ÷ 10000 × 100 =','4.5%')],
+ point:'8% の予定が 4.5% に。かかるお金が増えると、その分はまず会社のもうけから減っていく。'},
+{c:'yosan',t:'橋梁補修工事｜作業員さんの労務費',
+ talk:[[BOSS,'工事課長','型枠と鉄筋の作業員さん、8人で60日かかる。1人1日2万3,000円で見ているよ。']],
+ q:'労務費（作業員さんの人件費）はいくら？',ans:1104,unit:'万円',
+ hint:['c','① 人数 × 日数 ＝ 人工（にんく）　② 人工 × 1日の金額'],
+ steps:[S('① 人工（にんく）','8 × 60 =','480人工'),S('② × 1日の金額','480 × 23000 =','11,040,000円'),S('③ 万円に直す','11040000 ÷ 10000 =','1,104万円')],
+ point:'「人工（にんく）」は、1人が1日働く量の単位。8人 × 60日 ＝ 480人工。'},
+/* --- 入札・契約 --- */
+{c:'keiyaku',t:'市発注 道路改良工事｜落札率',
+ talk:[[BOSS,'総務の先輩','予定価格は1億5,000万円（税抜き）で、うちは1億3,800万円で落札したよ。']],
+ q:'落札率は何%？',ans:92,unit:'%',
+ hint:['a','落札率 ＝ 落札金額 ÷ 予定価格 × 100<br>万に直すと 13,800 と 15,000。'],
+ steps:[S('① 割って100倍','13800 ÷ 15000 × 100 =','92%')],
+ point:'予定価格は、役所が「この工事はここまでなら払う」と決めた上限。落札率は、その何%で受けたかを表す。'},
+{c:'keiyaku',t:'市発注 道路改良工事｜契約金額（税込み）',
+ talk:[[BOSS,'総務の先輩','入札は税抜きの金額。契約書には、消費税10%を足した金額を書くよ。']],
+ q:'落札金額1億3,800万円（税抜き）の、契約金額（税込み）はいくら？',ans:15180,unit:'万円',
+ hint:['b','税込み ＝ 税抜き × 110 ÷ 100<br>1億3,800万 → 13,800万'],
+ steps:[S('① 110%にする','13800 × 110 ÷ 100 =','15,180万円 ＝ 1億5,180万円')],
+ point:'入札は税抜き、契約は税込みが基本。どちらの金額の話なのか、いつも確認する。'},
+{c:'keiyaku',t:'県発注 橋梁補修工事｜前払金',
+ talk:[[BOSS,'総務の先輩','契約金額は8,800万円（税込み）。この工事は、前払金を4割まで請求できるよ。']],
+ q:'前払金はいくらまで請求できる？',ans:3520,unit:'万円',
+ hint:['b','4割 ＝ 40%。<br>8,800 × 40 ÷ 100'],
+ steps:[S('① 40%を出す','8800 × 40 ÷ 100 =','3,520万円')],
+ point:'前払金は、工事を始めるための資金。保証会社の保証をつけて請求する。何割まで出るかは、発注者や工事の金額で決まっている。'},
+{c:'keiyaku',t:'県発注 橋梁補修工事｜変更契約',
+ talk:[[BOSS,'工事課長','掘ってみたら軟らかい地盤が出てきて、追加工事が768万円分ふえた。'],[BOSS,'総務の先輩','当初の契約は9,600万円（税込み）。変更契約の書類をつくるね。']],
+ q:'契約金額は何%ふえた？',ans:8,unit:'%',
+ hint:['a','もとは当初の契約9,600万円。<br>768 ÷ 9,600 × 100'],
+ steps:[S('① 割って100倍','768 ÷ 9600 × 100 =','8%')],
+ point:'工事の途中で内容が変わったら、発注者と話し合って「変更契約」を結ぶ。変更後の契約金額は1億368万円。'},
+{c:'keiyaku',kind:'choice',t:'総務のチェック｜特定建設業の許可',
+ talk:[[BOSS,'総務の先輩','この現場で下請けに出す金額は、A社2,300万円、B社1,850万円、C社980万円（ぜんぶ税込み）。'],[BOSS,'総務の先輩','元請が下請けに出す合計が5,000万円以上だと、特定建設業の許可がいるんだよ（建築一式工事は8,000万円以上）。']],
+ q:'この現場は、特定建設業の許可が必要？',choices:['必要','必要ない'],ans:'必要',
+ hint:['c','1社ずつではなく、下請けに出す金額の「合計」で判断する。'],
+ steps:[S('① 合計を出す','2300 + 1850 + 980 =','5,130万円'),S('② 5,000万円とくらべる','5130 ≧ 5000','必要')],
+ point:'2025年2月から、この基準は4,500万円 → 5,000万円に変わった。1社ごとの金額ではなく、合計で判断する。'},
+/* --- 出来高・支払い --- */
+{c:'deki',t:'河川改修工事｜出来高',
+ talk:[[BOSS,'工事課長','請負金額は2億4,000万円。今月までにできた分（出来高）は1億800万円だ。']],
+ q:'出来高は何%？',ans:45,unit:'%',
+ hint:['a','2億4,000万 → 24,000万、1億800万 → 10,800万。<br>10,800 ÷ 24,000 × 100'],
+ steps:[S('① 割って100倍','10800 ÷ 24000 × 100 =','45%')],
+ point:'「出来高（できだか）」は、できあがった分を金額で表したもの。進捗率を金額で見たものだと思えばOK。'},
+{c:'deki',t:'河川改修工事｜予定とのズレ',
+ talk:[[BOSS,'工事課長','工期は10か月。今、4か月が終わったところ。出来高は35%だ。']],
+ q:'予定より何ポイント遅れている？',ans:5,unit:'ポイント',
+ hint:['a','① 工期の何%がすぎたか（4 ÷ 10 × 100）　② 出来高とくらべる'],
+ steps:[S('① 工期がすぎた%','4 ÷ 10 × 100 =','40%'),S('② 差','40 − 35 =','5ポイント遅れ')],
+ point:'%どうしの差は「ポイント」。「5ポイント遅れ」と報告する。'},
+{c:'deki',t:'下請けへの支払い｜今月払う分',
+ talk:[[BOSS,'工事課長','くるみ舗装さんとの契約は3,000万円。今月末で出来高60%になった。'],[BOSS,'総務の先輩','先月までに1,050万円払ってるから、今月払うのは…。']],
+ q:'今月払う金額はいくら？',ans:750,unit:'万円',
+ hint:['b','① ここまでの合計（3,000万の60%）を出す　② 先月までに払った分を引く'],
+ steps:[S('① ここまでの合計','3000 × 60 ÷ 100 =','1,800万円'),S('② 払った分を引く','1800 − 1050 =','750万円')],
+ point:'元請は、発注者からお金を受け取ったら1か月以内に下請けに払うのが法律のルール（建設業法）。支払いの予定表は総務が作ることが多い。'}
+];
+G.forEach(function(g,i){g.id='g'+(i+1)});
+
+function fmtMan(n){n=Math.round(n*100)/100;if(n>=10000){var o=Math.floor(n/10000),r=Math.round((n-o*10000)*100)/100;return o+'億'+(r?r.toLocaleString('ja-JP')+'万':'')+'円'}return n.toLocaleString('ja-JP')+'万円'}
+function fmtAns(v,u){return u==='万円'?fmtMan(v):u==='円'?v.toLocaleString('ja-JP')+'円':fmt(v)+u}
+function parseJP(s){
+  s=String(s||'').replace(/[０-９．]/g,function(ch){return String.fromCharCode(ch.charCodeAt(0)-0xFEE0)}).replace(/ポイント|pt/g,'').replace(/[,，、\s円%％]/g,'');
+  var m=s.match(/^(?:(\d+(?:\.\d+)?)億)?(?:(\d+(?:\.\d+)?)万)?(\d+(?:\.\d+)?)?$/);
+  if(!m||(!m[1]&&!m[2]&&!m[3]))return null;
+  if(m[1]||m[2])return{yen:(+(m[1]||0))*1e8+(+(m[2]||0))*1e4+(+(m[3]||0))};
+  return{v:+m[3]};
+}
+function cands(p,u){
+  if(!p)return[];
+  if(p.yen!=null)return u==='円'?[p.yen]:[p.yen/1e4];
+  if(u==='万円')return[p.v,p.v/1e4];
+  if(u==='円')return[p.v,p.v*1e4];
+  return[p.v];
+}
+var gCat='all',gIdx=0,gAnswered=false,gSolved={};
+try{gSolved=JSON.parse(store.get('pyoko-genba')||'{}')||{}}catch(e){gSolved={}}
+var gEl=function(id){return document.getElementById(id)};
+var gBun=gEl('gBun'),gForm=gEl('gForm'),gInput=gEl('gInput'),gChoices=gEl('gChoices'),gHint=gEl('gHint'),gRes=gEl('gRes');
+(function(){var box=gEl('gCats');GCATS.forEach(function(c,i){var b=document.createElement('button');b.type='button';b.className='chip';b.id='gc-'+c[0];b.textContent=c[1];b.setAttribute('aria-pressed',c[0]===gCat?'true':'false');
+  b.addEventListener('click',function(){gCat=c[0];box.querySelectorAll('.chip').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});var l=gList();gIdx=l[0];renderG()});box.appendChild(b)})})();
+function gList(){var l=[];G.forEach(function(g,i){if(gCat==='all'||g.c===gCat)l.push(i)});return l}
+function catName(c){for(var i=0;i<GCATS.length;i++)if(GCATS[i][0]===c)return GCATS[i][1];return''}
+function renderG(){
+  var list=gList(),pos=list.indexOf(gIdx);if(pos<0){gIdx=list[0];pos=0}
+  var p=G[gIdx];gAnswered=false;
+  gEl('gPos').textContent=(pos+1)+' / '+list.length;
+  var done=0;G.forEach(function(g){if(gSolved[g.id])done++});gEl('gDone').textContent=done;gEl('gAll').textContent=G.length;
+  var dots=gEl('gDots');dots.innerHTML='';
+  list.forEach(function(i,k){var b=document.createElement('button');b.type='button';b.textContent=k+1;b.id='gd-'+G[i].id;
+    b.className=(gSolved[G[i].id]?'done ':'')+(i===gIdx?'cur':'');b.setAttribute('aria-label','問題'+(k+1)+(gSolved[G[i].id]?'（クリア）':''));
+    b.addEventListener('click',function(){gIdx=i;renderG()});dots.appendChild(b)});
+  gEl('gTag').textContent=catName(p.c)+'　問'+(gIdx+1);
+  gEl('gTitle').textContent=p.t;
+  gEl('gTalk').innerHTML=p.talk.map(function(l){return '<div class="line '+l[0]+'"><span class="who">'+l[1]+'</span><p>'+l[2]+'</p></div>'}).join('');
+  var tb=gEl('gTable');
+  if(p.table){tb.innerHTML='<table>'+p.table.map(function(r,ri){return '<tr>'+r.map(function(c){return ri===0?'<th>'+c+'</th>':'<td>'+c+'</td>'}).join('')+'</tr>'}).join('')+'</table>';tb.hidden=false}else{tb.hidden=true;tb.innerHTML=''}
+  gEl('gQ').textContent=p.q;
+  if(p.kind==='choice'){gForm.hidden=true;gChoices.hidden=false;
+    gChoices.innerHTML=p.choices.map(function(c){return '<button type="button" data-v="'+c+'">'+c+'</button>'}).join('')+'<button type="button" class="btn ghost" id="gHintBtn2">ヒント</button>';
+    gChoices.querySelectorAll('[data-v]').forEach(function(b){b.addEventListener('click',function(){if(gAnswered)return;judgeG(b.dataset.v===p.ans,b.dataset.v)})});
+    gEl('gHintBtn2').addEventListener('click',toggleGHint);
+  }else{gForm.hidden=false;gChoices.hidden=true;gChoices.innerHTML='';gEl('gUnit').textContent=p.unit;gInput.value=''}
+  gHint.hidden=true;gRes.hidden=true;setMood(gBun,'normal');
+  gEl('gPrev').disabled=pos===0;
+  gEl('gNext').textContent=pos===list.length-1?'最初の問題へ →':'つぎの問題 →';
+}
+function toggleGHint(){var p=G[gIdx];gHint.className='formula '+p.hint[0];gHint.innerHTML='<div class="tag">ヒント</div><p>'+p.hint[1]+'</p>';gHint.hidden=!gHint.hidden}
+function judgeG(right,given){
+  var p=G[gIdx];gAnswered=true;
+  if(right){gSolved[p.id]=1;store.set('pyoko-genba',JSON.stringify(gSolved));setMood(gBun,'happy');gBun.classList.remove('hop');void gBun.offsetWidth;gBun.classList.add('hop')}
+  else setMood(gBun,'think');
+  var ansText=p.kind==='choice'?p.ans:fmtAns(p.ans,p.unit);
+  var h='<div class="head">'+(right?pick(praise):pick(cheer))+'</div>';
+  h+='<p>こたえ：<span class="big-ans">'+ansText+'</span></p>';
+  h+='<p><b>とき方</b></p>'+p.steps.map(function(s){return '<p class="muted">'+s.l+'</p><div class="keys">'+keyHTML(s.k,s.a)+'</div>'}).join('');
+  h+='<div class="point"><span class="pl">現場ポイント</span><span>'+p.point+'</span></div>';
+  gRes.className='result '+(right?'ok':'ng');gRes.innerHTML=h;gRes.hidden=false;gHint.hidden=true;
+  var done=0;G.forEach(function(g){if(gSolved[g.id])done++});gEl('gDone').textContent=done;
+  var d=gEl('gd-'+p.id);if(d&&right)d.classList.add('done');
+}
+gForm.addEventListener('submit',function(e){
+  e.preventDefault();if(gAnswered)return;
+  var p=G[gIdx],parsed=parseJP(gInput.value);
+  if(!parsed){gInput.focus();return}
+  var tol=p.tol!=null?p.tol:(p.unit==='円'?0.5:0.01);
+  var right=cands(parsed,p.unit).some(function(v){return Math.abs(v-p.ans)<=tol});
+  judgeG(right,gInput.value);
+});
+gEl('gHintBtn').addEventListener('click',toggleGHint);
+gEl('gPrev').addEventListener('click',function(){var l=gList(),pos=l.indexOf(gIdx);if(pos>0){gIdx=l[pos-1];renderG();gEl('gCard').scrollIntoView({block:'start'})}});
+gEl('gNext').addEventListener('click',function(){var l=gList(),pos=l.indexOf(gIdx);gIdx=l[(pos+1)%l.length];renderG();gEl('gCard').scrollIntoView({block:'start'})});
+makeCalc('gcGrid','gcExpr','gcRes',function(v){gInput.value=v;if(!gForm.hidden)gInput.focus()});
+renderG();
 
 /* ---------- construction ---------- */
 var kTotal=document.getElementById('kTotal'),kDone=document.getElementById('kDone'),kDoneNum=document.getElementById('kDoneNum'),
@@ -1042,7 +1395,14 @@ var D=[
  {c:'こまった',t:'どれが「ぜんぶ」かわからない',w:'わる数がどっちか迷う',f:'「〜のうち」「〜の」「〜に対して」の前がぜんぶ',k:'',a:'',e:'「500mのうち200m」→ ぜんぶは500',n:'くらべる「もと」になるほうが、ぜんぶ。増加率なら「まえ」。'},
  {c:'こまった',t:'「%」と「ポイント」のちがい',w:'40%が50%になったとき、なんて言う？',f:'%どうしの差 ＝ ポイント',k:'50 − 40 =',a:'10ポイント',e:'40% → 50%は「10ポイント上がった」',n:'「10%上がった」と言うと、40の10%（＝4）増えて44%という意味にもなってしまいます。'},
  {c:'こまった',t:'電卓の「%」ボタン',w:'押したら変な数字になった',f:'%ボタンは使わない',k:'C',a:'からやり直し',e:'かわりに「÷」「×」と「100」を使う',n:'機種によって動きがちがうので、使わないのがいちばん安全です。'},
- {c:'こまった',t:'電卓でまちがえた',w:'押しまちがえたかも',f:'Cでぜんぶ消して、最初から',k:'C',a:'',e:'',n:'あせらなくてOK。答えが出たら、たしかめ算（反対の計算）で確認しよう。'}
+ {c:'こまった',t:'電卓でまちがえた',w:'押しまちがえたかも',f:'Cでぜんぶ消して、最初から',k:'C',a:'',e:'',n:'あせらなくてOK。答えが出たら、たしかめ算（反対の計算）で確認しよう。'},
+ {c:'きほん',t:'「億」を「万」に直す',w:'1億2,000万円のような大きい金額を電卓に入れるとき',f:'1億 ＝ 10,000万',k:'',a:'',e:'1億2,000万円 → 12,000万円、1億800万円 → 10,800万円',n:'電卓には「万」をとって入れればOK。答えも「万円」で読む。'},
+ {c:'工事',t:'落札率（らくさつりつ）',w:'予定価格のどれくらいで落札したか',f:'落札金額 ÷ 予定価格 × 100',k:'13800 ÷ 15000 × 100 =',a:'92%',e:'予定価格1億5,000万円、落札1億3,800万円 → 92%',n:'入札の金額は、ふつう税抜き。'},
+ {c:'工事',t:'値引き率',w:'見積がどれくらい下がったか',f:'(もとの見積 − 値引き後) ÷ もとの見積 × 100',k:'224 ÷ 3200 × 100 =',a:'7%',e:'3,200万円 → 2,976万円（差224万円）→ 7%引き',n:'割るのは「もとの見積」。'},
+ {c:'工事',t:'粗利率（あらりりつ）',w:'工事でどれくらいもうかるか',f:'(請負金額 − 実行予算) ÷ 請負金額 × 100',k:'1200 ÷ 12000 × 100 =',a:'10%',e:'請負1億2,000万円、実行予算1億800万円 → もうけ1,200万円 → 10%',n:'実行予算は、工事に実際にかかるお金の見込み。'},
+ {c:'工事',t:'単価 × 数量（合計金額）',w:'「1立米いくら」「1トンいくら」から合計を出す',f:'単価 × 数量',k:'18800 × 850 =',a:'15,980,000円',e:'生コン1立米1万8,800円 × 850立米 → 1,598万円',n:'「立米（りゅうべ）」は㎥のこと。'},
+ {c:'工事',t:'人工（にんく）と労務費',w:'作業員さんの人件費を出す',f:'人数 × 日数 ＝ 人工\n人工 × 1日の金額 ＝ 労務費',k:'480 × 23000 =',a:'11,040,000円',e:'8人 × 60日 ＝ 480人工 → 1人1日2万3,000円なら1,104万円',n:'1人が1日働く量が「1人工」。'},
+ {c:'工事',t:'見積の「別途」',w:'見積書に「〜は別途」と書いてある',f:'別途の分を足してから比べる',k:'1720 + 95 + 60 =',a:'1,875万円',e:'1,720万円＋足場95万円＋運搬60万円 → 実質1,875万円',n:'「別途」は、見積金額に入っていないという意味。'}
 ];
 var dCat='ぜんぶ', dCats=['ぜんぶ','きほん','工事','お店・生活','こまった'];
 var catBox=document.getElementById('dictCats');
